@@ -1,6 +1,4 @@
-import type { FloatingObjectConfig } from "@/types/floating-object";
-
-function CardContent({ id }: { id: string }) {
+export default function FloatingCardContent({ id }: { id: string }) {
   switch (id) {
     case "projects":
       return (
@@ -19,7 +17,7 @@ function CardContent({ id }: { id: string }) {
     case "timeline":
       return (
         <div className="flex h-full w-full flex-col justify-center gap-1 p-4">
-          <span className="text-[10px] font-medium tracking-wide text-zinc-400">
+          <span className="text-[10px] font-medium tracking-wide text-zinc-500">
             2023 → 2026
           </span>
           <span className="text-sm font-semibold text-zinc-900">
@@ -58,30 +56,4 @@ function CardContent({ id }: { id: string }) {
     default:
       return null;
   }
-}
-
-export default function FloatingPlaceholder({
-  id,
-  position,
-  width,
-  height,
-  hideOnMobile,
-}: FloatingObjectConfig) {
-  return (
-    <div
-      className={`absolute rounded-2xl border border-zinc-200 bg-neutral-50 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-8px_rgba(0,0,0,0.08)] ${
-        hideOnMobile ? "hidden md:block" : "block"
-      }`}
-      style={{
-        top: position.top,
-        bottom: position.bottom,
-        left: position.left,
-        right: position.right,
-        width,
-        height,
-      }}
-    >
-      <CardContent id={id} />
-    </div>
-  );
 }
