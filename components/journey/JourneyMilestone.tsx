@@ -22,7 +22,9 @@ export default function JourneyMilestone({
         <span className="text-sm font-medium text-zinc-600">
           {organization}
         </span>
-        <p className="mt-2 max-w-2xl text-sm text-zinc-500">{description}</p>
+        {description && (
+          <p className="mt-2 max-w-2xl text-sm text-zinc-500">{description}</p>
+        )}
       </div>
     </Reveal>
   );

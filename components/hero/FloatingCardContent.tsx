@@ -8,9 +8,9 @@ export default function FloatingCardContent({ id }: { id: string }) {
           </span>
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-semibold text-zinc-900">
-              Krafton India
+              KRAFTON India
             </span>
-            <span className="text-xs text-zinc-500">Growth Strategy</span>
+            <span className="text-xs text-zinc-500">Project Lead</span>
           </div>
         </div>
       );
@@ -18,38 +18,38 @@ export default function FloatingCardContent({ id }: { id: string }) {
       return (
         <div className="flex h-full w-full flex-col justify-center gap-1 p-4">
           <span className="text-[10px] font-medium tracking-wide text-zinc-500">
-            2023 → 2026
+            May 2026 → Present
           </span>
           <span className="text-sm font-semibold text-zinc-900">
             President
           </span>
-          <span className="text-xs text-zinc-500">Grandeur Consulting</span>
+          <span className="text-xs text-zinc-500">Grandeur, SSCBS</span>
         </div>
       );
     case "metrics":
       return (
         <div className="flex h-full w-full flex-col items-center justify-center gap-1 p-4 text-center">
           <span className="text-2xl font-semibold tracking-tight text-zinc-900">
-            8.7K+
+            9K+
           </span>
-          <span className="text-xs text-zinc-500">LinkedIn Community</span>
+          <span className="text-xs text-zinc-500">LinkedIn Followers</span>
         </div>
       );
     case "ai-builds":
       return (
         <div className="flex h-full w-full flex-col justify-center gap-0.5 p-4">
           <span className="text-sm font-semibold text-zinc-900">
-            AI Case Copilot
+            Consulting Director
           </span>
-          <span className="text-xs text-zinc-500">40+ Workflows</span>
+          <span className="text-xs text-zinc-500">Harbor & Holt</span>
         </div>
       );
     case "writing":
       return (
         <div className="flex h-full w-full flex-col justify-center gap-0.5 p-4">
-          <span className="text-xs text-zinc-500">Turning Meh into</span>
+          <span className="text-xs text-zinc-500">Content Creator</span>
           <span className="text-sm font-semibold text-zinc-900">
-            Memorable
+            LinkedIn
           </span>
         </div>
       );

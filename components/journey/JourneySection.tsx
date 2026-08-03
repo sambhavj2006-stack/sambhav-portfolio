@@ -1,6 +1,8 @@
 import BackgroundGrid from "@/components/ui/BackgroundGrid";
 import JourneyHeader from "./JourneyHeader";
 import JourneyTimeline from "./JourneyTimeline";
+import JourneyFoundations from "./JourneyFoundations";
+import JourneyNumbers from "./JourneyNumbers";
 
 export default function JourneySection() {
   return (
@@ -12,6 +14,8 @@ export default function JourneySection() {
       <div className="relative mx-auto flex max-w-7xl flex-col gap-16">
         <JourneyHeader />
         <JourneyTimeline />
+        <JourneyFoundations />
+        <JourneyNumbers />
       </div>
     </section>
   );

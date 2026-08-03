@@ -3,5 +3,5 @@ export type JourneyMilestone = {
   range: string;
   title: string;
   organization: string;
-  description: string;
+  description?: string;
 };

@@ -8,6 +8,9 @@ import { useSettledReducedMotion } from "./useSettledReducedMotion";
 const SECTIONS = [
   { id: "hero", label: "INTRO" },
   { id: "journey", label: "JOURNEY" },
+  { id: "builds", label: "BUILDS" },
+  { id: "awards", label: "AWARDS" },
+  { id: "writing", label: "WRITING" },
   { id: "contact", label: "CONTACT" },
 ];
 

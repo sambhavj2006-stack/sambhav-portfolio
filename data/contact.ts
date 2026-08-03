@@ -1,26 +1,25 @@
 import type { ContactContent } from "@/types/contact";
 
-// TODO: replace primaryCta.href with the real Calendly link.
-// TODO: replace secondaryCta.href / any mailto links with the real email address.
 export const contactContent: ContactContent = {
   headline: "Let's build something memorable.",
   description:
-    "Whether it's consulting, AI products, startups, storytelling, or simply exchanging ideas—I always enjoy working with people obsessed with building meaningful things.",
+    "Whether it's consulting, strategy, storytelling, or simply exchanging ideas—I always enjoy working with people obsessed with building meaningful things.",
   primaryCta: {
-    label: "Let's Talk",
-    href: "https://calendly.com/sambhav-jain",
+    label: "Email Me",
+    href: "mailto:sambhavj2006@gmail.com",
   },
   secondaryCta: {
-    label: "Email Me",
-    href: "mailto:hello@sambhavjain.com",
+    label: "Connect on LinkedIn",
+    href: "https://www.linkedin.com/in/sambhavjain157/",
   },
   availability: {
     title: "Currently",
     items: [
-      "President — Grandeur Consulting",
-      "Building AI products",
-      "Consulting & Strategy",
-      "Open to exciting collaborations",
+      "President — Grandeur, SSCBS",
+      "Consulting Director — Harbor & Holt",
+      "Project Lead — KRAFTON India & Honasa Consumer",
+      "Founder — Clarifyd",
+      "Open to consulting & strategy conversations",
     ],
     statusText: "Available for conversations.",
   },
