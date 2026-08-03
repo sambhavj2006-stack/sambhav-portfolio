@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { CURSOR_DOT_SPRING, CURSOR_RING_SPRING } from "@/lib/motion";
 import { useSurfaceField } from "./useSurfaceField";
-
-const RING_SPRING = { stiffness: 260, damping: 24, mass: 0.3 };
-const DOT_SPRING = { stiffness: 420, damping: 28, mass: 0.15 };
 
 type CursorVariant = "default" | "click" | "pull" | "view";
 
@@ -49,10 +47,10 @@ export default function CursorInstrument() {
 
   const active = Boolean(field) && !field!.prefersReducedMotion && !field!.isCoarsePointer;
 
-  const springX = useSpring(field?.x ?? fallback, RING_SPRING);
-  const springY = useSpring(field?.y ?? fallback, RING_SPRING);
-  const springRingScale = useSpring(ringScale, RING_SPRING);
-  const springDotScale = useSpring(dotScale, DOT_SPRING);
+  const springX = useSpring(field?.x ?? fallback, CURSOR_RING_SPRING);
+  const springY = useSpring(field?.y ?? fallback, CURSOR_RING_SPRING);
+  const springRingScale = useSpring(ringScale, CURSOR_RING_SPRING);
+  const springDotScale = useSpring(dotScale, CURSOR_DOT_SPRING);
 
   useEffect(() => {
     if (!active) return;

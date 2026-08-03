@@ -23,7 +23,13 @@ export default function JourneyTimeline() {
   const progress = prefersReducedMotion ? scrollYProgress : smoothProgress;
 
   return (
-    <div ref={containerRef} className="relative border-b border-zinc-200">
+    <div
+      ref={containerRef}
+      className="relative border-b border-zinc-200 lg:pl-8 xl:pl-12"
+    >
+      {/* Aligned to the section's own left margin (same as the heading above it), so the
+          rail reads as an extension of the content's edge — an architectural guide the
+          milestones sit a deliberate distance to the right of, never touching it. */}
       <motion.div
         aria-hidden="true"
         className="absolute left-0 top-0 hidden w-px origin-top bg-zinc-900 lg:block"

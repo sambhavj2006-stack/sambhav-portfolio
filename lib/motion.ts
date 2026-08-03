@@ -16,6 +16,13 @@ export const MAGNETIC_SPRING = { stiffness: 220, damping: 20, mass: 0.25 };
 /** Heaviest spring in the system — used for large-scale motion (scroll progress) that should feel like it has real inertia. */
 export const INERTIA_SPRING = { stiffness: 90, damping: 30, mass: 0.8 };
 
+/** Slow, lazy follow for the ambient Hero cursor glow — deliberately the laziest spring in the system. */
+export const GLOW_SPRING = { stiffness: 80, damping: 24, mass: 0.6 };
+
+/** The custom cursor's own springs — snappier than everything else, since it has to visibly keep up with the pointer. */
+export const CURSOR_RING_SPRING = { stiffness: 260, damping: 24, mass: 0.3 };
+export const CURSOR_DOT_SPRING = { stiffness: 420, damping: 28, mass: 0.15 };
+
 /** Shared viewport threshold every scroll-reveal in the system fires against, so sections wake up in lockstep. */
 export const REVEAL_VIEWPORT = { once: true, margin: "-80px" } as const;
 

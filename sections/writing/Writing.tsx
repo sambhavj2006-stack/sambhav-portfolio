@@ -1,5 +1,6 @@
 import BackgroundGrid from "@/components/ui/BackgroundGrid";
 import Reveal from "@/components/system/Reveal";
+import ScrollStage from "@/components/system/ScrollStage";
 import SectionHeading from "@/components/ui/SectionHeading";
 import StatTile from "@/components/ui/StatTile";
 import Button from "@/components/ui/Button";
@@ -19,7 +20,7 @@ const topmateHref =
 
 export default function Writing() {
   return (
-    <section
+    <ScrollStage
       id="writing"
       className="relative w-full overflow-hidden bg-white px-6 py-24 md:py-32"
     >
@@ -58,6 +59,6 @@ export default function Writing() {
           </Magnetic>
         </Reveal>
       </div>
-    </section>
+    </ScrollStage>
   );
 }

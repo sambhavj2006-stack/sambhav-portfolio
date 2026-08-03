@@ -25,6 +25,18 @@ const MAX_MICRO_TILT = 0.6; // deg — rotateX/rotateY budget, scaled by depth
 const REPULSION_RADIUS = 220;
 const MAX_REPULSION = 18;
 
+/**
+ * Responsive motion density: desktop (≥1440, the flagship) gets the full amplitude;
+ * laptop (1024–1439) is scaled down ~15%; tablet (<1024, already showing fewer/smaller
+ * cards) gets a bigger cut on top of that. Read from the same rect-measuring effect that
+ * already tracks the card's position — no extra listener.
+ */
+function motionScaleForWidth(width: number): number {
+  if (width < 1024) return 0.7;
+  if (width < 1440) return 0.85;
+  return 1;
+}
+
 const TIER_STYLES: Record<
   FloatingObjectConfig["tier"],
   { border: string; surface: string; shadow: string; hoverShadow: string }
@@ -93,12 +105,14 @@ export default function FloatingCard({
 
   const homeRef = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
+  const motionScaleRef = useRef(1);
 
   useEffect(() => {
     const el = homeRef.current;
     if (!el) return;
     const measure = () => {
       rectRef.current = el.getBoundingClientRect();
+      motionScaleRef.current = motionScaleForWidth(window.innerWidth);
     };
     measure();
     const resizeObserver = new ResizeObserver(measure);
@@ -134,20 +148,19 @@ export default function FloatingCard({
   const mouseY = cursor?.mouseY ?? fallbackMouseY;
 
   // Ambient wide-field parallax — near layers (higher depth) answer the cursor more.
+  // Function form (not the fixed range-mapping form) so the responsive motionScaleRef can
+  // be folded in without a second transform stage.
   const ambientX = useTransform(
     mouseX,
-    [-1, 1],
-    [-MAX_AMBIENT_TRANSLATE * parallaxStrength, MAX_AMBIENT_TRANSLATE * parallaxStrength]
+    (v) => v * MAX_AMBIENT_TRANSLATE * parallaxStrength * motionScaleRef.current
   );
   const ambientY = useTransform(
     mouseY,
-    [-1, 1],
-    [-MAX_AMBIENT_TRANSLATE * parallaxStrength, MAX_AMBIENT_TRANSLATE * parallaxStrength]
+    (v) => v * MAX_AMBIENT_TRANSLATE * parallaxStrength * motionScaleRef.current
   );
   const ambientRotateZ = useTransform(
     mouseX,
-    [-1, 1],
-    [-MAX_AMBIENT_TILT * parallaxStrength, MAX_AMBIENT_TILT * parallaxStrength]
+    (v) => v * MAX_AMBIENT_TILT * parallaxStrength * motionScaleRef.current
   );
 
   // Local repulsion — computed from real screen distance, not the normalized ambient field.
@@ -169,7 +182,8 @@ export default function FloatingCard({
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < REPULSION_RADIUS && dist > 0.001) {
       const falloff = 1 - dist / REPULSION_RADIUS;
-      const strength = falloff * MAX_REPULSION * (0.4 + depth * 0.6);
+      const strength =
+        falloff * MAX_REPULSION * (0.4 + depth * 0.6) * motionScaleRef.current;
       pushX.set((dx / dist) * strength);
       pushY.set((dy / dist) * strength);
     } else {
@@ -193,7 +207,7 @@ export default function FloatingCard({
   // Procedural drift — three layered sine waves per axis, unique phase per widget, driven
   // by the engine's shared clock. This is what replaces the old repeating keyframe float.
   //
-  // Performance: 3 of these 5 widgets stay `display:none` until xl (see visibilityClassName
+  // Performance: 3 of these 5 widgets stay `display:none` until lg (see visibilityClassName
   // below), but the shared clock ticks every rAF frame for the whole page regardless — so
   // every mounted card, hidden or not, would otherwise keep recomputing 5 sine-wave chains
   // 60x/second for nothing. `isVisible()` reads the last measured rect (already tracked for
@@ -203,24 +217,28 @@ export default function FloatingCard({
   const fallbackClock = useMotionValue(0);
   const clock = field?.elapsed ?? fallbackClock;
   const driftX = useTransform(clock, (t) =>
-    engineActive && isVisible() ? organicWave(t, phase.x, driftSpeed) * driftRadius : 0
+    engineActive && isVisible()
+      ? organicWave(t, phase.x, driftSpeed) * driftRadius * motionScaleRef.current
+      : 0
   );
   const driftY = useTransform(clock, (t) =>
     engineActive && isVisible()
-      ? organicWave(t, phase.y, driftSpeed * 1.15) * driftRadius * 0.85
+      ? organicWave(t, phase.y, driftSpeed * 1.15) * driftRadius * 0.85 * motionScaleRef.current
       : 0
   );
   const driftRotateZ = useTransform(clock, (t) =>
-    engineActive && isVisible() ? organicWave(t, phase.z, driftSpeed * 0.8) * MAX_DRIFT_TILT : 0
+    engineActive && isVisible()
+      ? organicWave(t, phase.z, driftSpeed * 0.8) * MAX_DRIFT_TILT * motionScaleRef.current
+      : 0
   );
   const driftRotateX = useTransform(clock, (t) =>
     engineActive && isVisible()
-      ? organicWave(t, rxPhase.x, driftSpeed * 1.3) * MAX_MICRO_TILT * depth
+      ? organicWave(t, rxPhase.x, driftSpeed * 1.3) * MAX_MICRO_TILT * depth * motionScaleRef.current
       : 0
   );
   const driftRotateY = useTransform(clock, (t) =>
     engineActive && isVisible()
-      ? organicWave(t, ryPhase.y, driftSpeed * 1.5) * MAX_MICRO_TILT * depth
+      ? organicWave(t, ryPhase.y, driftSpeed * 1.5) * MAX_MICRO_TILT * depth * motionScaleRef.current
       : 0
   );
 

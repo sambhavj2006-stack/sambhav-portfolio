@@ -7,12 +7,14 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "12.5rem",
     height: "9rem",
     hideOnMobile: true,
-    // Tablet gets its own larger, deliberately-placed treatment instead of a scaled-down
-    // desktop layout; xl: restores the exact approved desktop numbers above.
+    // Tablet (md, 768-1023) gets its own larger, deliberately-placed treatment instead
+    // of a scaled-down desktop layout; lg: restores the approved desktop numbers — laptop
+    // and true desktop now share the same 5-card layout, differentiated only by motion
+    // amplitude (see FloatingCard's motionScaleForWidth), not by which cards show.
     // top/height kept small even at md so a short landscape-tablet viewport (e.g. 1024x768)
     // still clears the headline — verified against the required breakpoint matrix.
     tabletClassName:
-      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[7rem] xl:top-[8%] xl:left-[6%] xl:w-[12.5rem] xl:h-[9rem]",
+      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[7rem] lg:top-[8%] lg:left-[6%] lg:w-[12.5rem] lg:h-[9rem]",
     tier: 1,
     animation: {
       depth: 1,
@@ -30,7 +32,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "10rem",
     height: "6rem",
     hideOnMobile: true,
-    visibleFrom: "xl",
+    visibleFrom: "lg",
     tier: 2,
     animation: {
       depth: 0.65,
@@ -49,7 +51,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     height: "8rem",
     hideOnMobile: true,
     tabletClassName:
-      "md:block md:bottom-[10%] md:right-[6%] md:left-auto md:w-[9.5rem] md:h-[9.5rem] xl:bottom-[12%] xl:left-[18%] xl:right-auto xl:w-[8rem] xl:h-[8rem]",
+      "md:block md:bottom-[10%] md:right-[6%] md:left-auto md:w-[9.5rem] md:h-[9.5rem] lg:bottom-[12%] lg:left-[18%] lg:right-auto lg:w-[8rem] lg:h-[8rem]",
     tier: 3,
     animation: {
       depth: 0.5,
@@ -63,11 +65,11 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
   },
   {
     id: "ai-builds",
-    position: { bottom: "9%", right: "-2.5rem" },
+    position: { bottom: "9%", right: "-1.5rem" },
     width: "14rem",
     height: "8rem",
     hideOnMobile: true,
-    visibleFrom: "xl",
+    visibleFrom: "lg",
     tier: 4,
     animation: {
       depth: 0.85,
@@ -85,7 +87,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "8rem",
     height: "5rem",
     hideOnMobile: true,
-    visibleFrom: "xl",
+    visibleFrom: "lg",
     tier: 5,
     animation: {
       depth: 0.4,

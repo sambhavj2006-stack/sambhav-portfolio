@@ -2,17 +2,17 @@
 
 import { useContext } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { GLOW_SPRING } from "@/lib/motion";
 import { CursorContext } from "./cursor-context";
 
 const GLOW_SIZE = 640;
-const SPRING = { stiffness: 80, damping: 24, mass: 0.6 };
 
 export default function CursorGlow() {
   const cursor = useContext(CursorContext);
   const fallbackX = useMotionValue(0);
   const fallbackY = useMotionValue(0);
-  const springX = useSpring(cursor?.glowX ?? fallbackX, SPRING);
-  const springY = useSpring(cursor?.glowY ?? fallbackY, SPRING);
+  const springX = useSpring(cursor?.glowX ?? fallbackX, GLOW_SPRING);
+  const springY = useSpring(cursor?.glowY ?? fallbackY, GLOW_SPRING);
 
   if (!cursor) return null;
 

@@ -1,5 +1,6 @@
 import BackgroundGrid from "@/components/ui/BackgroundGrid";
 import Reveal from "@/components/system/Reveal";
+import ScrollStage from "@/components/system/ScrollStage";
 import SectionHeading from "@/components/ui/SectionHeading";
 import InfoCard from "@/components/ui/InfoCard";
 import { projects } from "@/data/projects";
@@ -9,7 +10,7 @@ const MAX_STAGGER_DELAY = 0.24;
 
 export default function Builds() {
   return (
-    <section
+    <ScrollStage
       id="builds"
       className="relative w-full overflow-hidden bg-white px-6 py-24 md:py-32"
     >
@@ -39,6 +40,6 @@ export default function Builds() {
           ))}
         </div>
       </div>
-    </section>
+    </ScrollStage>
   );
 }
