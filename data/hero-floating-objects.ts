@@ -7,6 +7,10 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "12.5rem",
     height: "9rem",
     hideOnMobile: true,
+    // Tablet gets its own larger, deliberately-placed treatment instead of a scaled-down
+    // desktop layout; xl: restores the exact approved desktop numbers above.
+    tabletClassName:
+      "md:block md:top-[9%] md:left-[5%] md:w-[13.5rem] md:h-[8.5rem] xl:top-[8%] xl:left-[6%] xl:w-[12.5rem] xl:h-[9rem]",
     tier: 1,
     animation: {
       depth: 1,
@@ -24,6 +28,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "10rem",
     height: "6rem",
     hideOnMobile: true,
+    visibleFrom: "xl",
     tier: 2,
     animation: {
       depth: 0.65,
@@ -41,6 +46,8 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "8rem",
     height: "8rem",
     hideOnMobile: true,
+    tabletClassName:
+      "md:block md:bottom-[10%] md:right-[6%] md:left-auto md:w-[9.5rem] md:h-[9.5rem] xl:bottom-[12%] xl:left-[18%] xl:right-auto xl:w-[8rem] xl:h-[8rem]",
     tier: 3,
     animation: {
       depth: 0.5,
@@ -58,6 +65,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "14rem",
     height: "8rem",
     hideOnMobile: true,
+    visibleFrom: "xl",
     tier: 4,
     animation: {
       depth: 0.85,
@@ -75,7 +83,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     width: "8rem",
     height: "5rem",
     hideOnMobile: true,
-    visibleFrom: "lg",
+    visibleFrom: "xl",
     tier: 5,
     animation: {
       depth: 0.4,

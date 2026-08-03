@@ -73,7 +73,8 @@ export default function FloatingCard({
   width,
   height,
   hideOnMobile,
-  visibleFrom = "md",
+  visibleFrom = "xl",
+  tabletClassName,
   tier,
   animation,
 }: FloatingObjectConfig) {
@@ -216,25 +217,43 @@ export default function FloatingCard({
     ([s, d]) => (s as number) + (d as number)
   );
 
+  // Widgets with a tabletClassName own their position/size entirely through Tailwind's
+  // md:/xl: variants (a hand-authored literal string — see FloatingObjectConfig), since
+  // inline style would otherwise always outrank those classes. Widgets without one keep
+  // the original single-breakpoint inline-style behaviour, unchanged.
+  //
+  // These branches must stay literal strings (not `` `${visibleFrom}:block` ``) — Tailwind's
+  // scanner only generates CSS for class names it can find verbatim in source text, and a
+  // runtime-concatenated token like that never appears anywhere as literal text.
+  const hasTabletLayout = Boolean(tabletClassName);
+  const visibilityClassName = !hideOnMobile
+    ? "block"
+    : hasTabletLayout
+      ? `hidden ${tabletClassName}`
+      : visibleFrom === "md"
+        ? "hidden md:block"
+        : visibleFrom === "lg"
+          ? "hidden lg:block"
+          : "hidden xl:block";
+
   return (
     <motion.div
       ref={homeRef}
       aria-hidden="true"
-      className={`pointer-events-none absolute ${
-        hideOnMobile
-          ? visibleFrom === "lg"
-            ? "hidden lg:block"
-            : "hidden md:block"
-          : "block"
-      }`}
-      style={{
-        top: position.top,
-        bottom: position.bottom,
-        left: position.left,
-        right: position.right,
-        width,
-        height,
-      }}
+      data-hero-card={id}
+      className={`pointer-events-none absolute ${visibilityClassName}`}
+      style={
+        hasTabletLayout
+          ? undefined
+          : {
+              top: position.top,
+              bottom: position.bottom,
+              left: position.left,
+              right: position.right,
+              width,
+              height,
+            }
+      }
       initial={entranceActive ? { opacity: 0, y: 12 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={

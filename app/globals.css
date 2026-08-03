@@ -25,6 +25,12 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+html,
+body {
+  /* Safety net: nothing on the page should ever be able to force a horizontal scrollbar. */
+  overflow-x: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;

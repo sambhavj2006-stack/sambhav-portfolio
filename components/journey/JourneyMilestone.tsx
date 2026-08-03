@@ -13,11 +13,11 @@ export default function JourneyMilestone({
 }: JourneyMilestoneType & { index: number }) {
   return (
     <Reveal
-      className="grid grid-cols-1 gap-3 border-t border-zinc-200 py-10 md:grid-cols-12 md:gap-8"
+      className="grid grid-cols-1 gap-3 border-t border-zinc-200 py-8 sm:py-10 lg:grid-cols-12 lg:gap-8"
       delay={Math.min(index * STAGGER, MAX_STAGGER_DELAY)}
     >
-      <span className="text-sm text-zinc-500 md:col-span-3">{range}</span>
-      <div className="flex flex-col gap-1 md:col-span-9">
+      <span className="text-sm text-zinc-500 lg:col-span-3">{range}</span>
+      <div className="flex flex-col gap-1 lg:col-span-9">
         <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
         <span className="text-sm font-medium text-zinc-600">
           {organization}

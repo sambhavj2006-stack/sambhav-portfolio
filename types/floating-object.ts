@@ -24,12 +24,22 @@ export type FloatingObjectAnimation = {
 
 export type FloatingObjectConfig = {
   id: string;
+  /** desktop (≥1280px / xl) position — the approved, unchanged layout */
   position: FloatingObjectPosition;
+  /** desktop (≥1280px / xl) width */
   width: string;
+  /** desktop (≥1280px / xl) height */
   height: string;
   hideOnMobile?: boolean;
-  /** Tailwind breakpoint the card reappears at when hideOnMobile is true. Defaults to "md". */
-  visibleFrom?: "md" | "lg";
+  /** Tailwind breakpoint the card reappears at when hideOnMobile is true. Defaults to "xl" (true desktop). */
+  visibleFrom?: "md" | "lg" | "xl";
+  /**
+   * Hand-authored literal Tailwind classes (md:/xl: prefixed position + size) for widgets
+   * that get a distinct, larger tablet treatment instead of just disappearing until xl.
+   * Must be a complete literal string (not built from `position`/`width`/`height` at
+   * runtime) so Tailwind's static scanner can see and generate it.
+   */
+  tabletClassName?: string;
   /** 1 = primary proof, higher numbers recede (border/shadow/surface weight) */
   tier: 1 | 2 | 3 | 4 | 5;
   animation: FloatingObjectAnimation;
