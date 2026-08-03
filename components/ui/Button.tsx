@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { TargetAndTransition } from "motion/react";
 import type { ReactNode } from "react";
+import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
 import { SPRING_TRANSITION, isExternalLink } from "@/lib/motion";
 
 type ButtonVariant = "primary" | "secondary";
@@ -33,7 +34,7 @@ export default function Button({
   variant = "primary",
   className = "",
 }: ButtonProps) {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useSettledReducedMotion();
   const external = isExternalLink(href);
 
   return (

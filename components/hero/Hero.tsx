@@ -7,7 +7,10 @@ import HeroCTA from "./HeroCTA";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-6">
+    <section
+      id="hero"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-6"
+    >
       <BackgroundGrid />
       <CursorField objects={heroFloatingObjects} />
 

@@ -1,19 +1,13 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
+import Reveal from "@/components/system/Reveal";
 import { socialLinks } from "@/data/social-links";
-import { EASE_SIGNATURE, isExternalLink } from "@/lib/motion";
+import { isExternalLink } from "@/lib/motion";
 
 export default function SocialLinks() {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
-    <motion.ul
+    <Reveal
+      as="ul"
       className="flex flex-wrap items-center justify-center gap-6"
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay: 0.3, ease: EASE_SIGNATURE }}
+      delay={0.3}
     >
       {socialLinks.map((link) => {
         const external = isExternalLink(link.href);
@@ -30,6 +24,6 @@ export default function SocialLinks() {
           </li>
         );
       })}
-    </motion.ul>
+    </Reveal>
   );
 }

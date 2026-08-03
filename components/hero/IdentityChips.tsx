@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
 import { EASE_SIGNATURE } from "@/lib/motion";
 
 const IDENTITY = ["Builder", "Consultant", "President", "Creator"];
@@ -8,7 +9,7 @@ const BASE_DELAY = 0.15;
 const STAGGER = 0.08;
 
 export default function IdentityChips() {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useSettledReducedMotion();
 
   return (
     <ul className="flex flex-wrap items-center justify-center gap-3">

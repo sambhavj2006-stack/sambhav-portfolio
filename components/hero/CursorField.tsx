@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import { useMotionValue, useReducedMotion } from "motion/react";
+import { useEffect, useRef } from "react";
+import { useMotionValue, useMotionValueEvent } from "motion/react";
+import { useSurfaceField } from "@/components/system/useSurfaceField";
 import { CursorContext } from "./cursor-context";
 import FloatingCard from "./FloatingCard";
 import CursorGlow from "./CursorGlow";
@@ -19,68 +20,58 @@ export default function CursorField({
   objects: FloatingObjectConfig[];
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<number | null>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const field = useSurfaceField();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const glowX = useMotionValue(0);
   const glowY = useMotionValue(0);
-  const prefersReducedMotion = useReducedMotion();
-  // Client's first render must match SSR's assumption (no window) to avoid a
-  // hydration mismatch, since useReducedMotion() resolves synchronously on mount.
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  // field.prefersReducedMotion is already hydration-safe (settled post-mount at the
+  // engine's source), so it's fine to trust directly here.
+  const prefersReducedMotion = Boolean(field?.prefersReducedMotion);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
-
     const el = wrapperRef.current;
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      glowX.set(rect.width / 2 - GLOW_SIZE / 2);
-      glowY.set(rect.height / 2 - GLOW_SIZE / 2);
-    }
-
-    const updateFromPoint = (clientX: number, clientY: number) => {
-      const node = wrapperRef.current;
-      if (!node) return;
-      const rect = node.getBoundingClientRect();
-      const relX = (clientX - rect.left - rect.width / 2) / (rect.width / 2);
-      const relY = (clientY - rect.top - rect.height / 2) / (rect.height / 2);
-      mouseX.set(clamp(relX, -1, 1));
-      mouseY.set(clamp(relY, -1, 1));
-      glowX.set(clientX - rect.left - GLOW_SIZE / 2);
-      glowY.set(clientY - rect.top - GLOW_SIZE / 2);
+    if (!el) return;
+    const measure = () => {
+      rectRef.current = el.getBoundingClientRect();
     };
+    measure();
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(el);
+    window.addEventListener("scroll", measure, { passive: true });
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (frameRef.current !== null) return;
-      frameRef.current = requestAnimationFrame(() => {
-        frameRef.current = null;
-        updateFromPoint(event.clientX, event.clientY);
-      });
-    };
-
-    const handlePointerLeave = () => {
-      mouseX.set(0);
-      mouseY.set(0);
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    });
-    window.addEventListener("pointerleave", handlePointerLeave);
-    window.addEventListener("blur", handlePointerLeave);
+    const rect = el.getBoundingClientRect();
+    glowX.set(rect.width / 2 - GLOW_SIZE / 2);
+    glowY.set(rect.height / 2 - GLOW_SIZE / 2);
 
     return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handlePointerLeave);
-      window.removeEventListener("blur", handlePointerLeave);
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", measure);
     };
-  }, [mouseX, mouseY, glowX, glowY, prefersReducedMotion]);
+  }, [glowX, glowY]);
+
+  const applyFromField = () => {
+    if (!field) return;
+    const rect = rectRef.current;
+    if (!rect) return;
+    if (field.presence.get() === 0) {
+      mouseX.set(0);
+      mouseY.set(0);
+      return;
+    }
+    const clientX = field.x.get();
+    const clientY = field.y.get();
+    const relX = (clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const relY = (clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    mouseX.set(clamp(relX, -1, 1));
+    mouseY.set(clamp(relY, -1, 1));
+    glowX.set(clientX - rect.left - GLOW_SIZE / 2);
+    glowY.set(clientY - rect.top - GLOW_SIZE / 2);
+  };
+
+  useMotionValueEvent(field?.x ?? mouseX, "change", applyFromField);
+  useMotionValueEvent(field?.y ?? mouseY, "change", applyFromField);
 
   return (
     <div
@@ -89,7 +80,7 @@ export default function CursorField({
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <CursorContext.Provider value={{ mouseX, mouseY, glowX, glowY }}>
-        {mounted && !prefersReducedMotion && <CursorGlow />}
+        {!prefersReducedMotion && field && <CursorGlow />}
         {objects.map((object) => (
           <FloatingCard key={object.id} {...object} />
         ))}

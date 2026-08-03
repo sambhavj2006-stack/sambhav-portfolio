@@ -6,20 +6,20 @@ export type FloatingObjectPosition = {
 };
 
 export type FloatingObjectAnimation = {
-  /** 0-1, controls hover lift/shadow intensity */
+  /** 0-1, controls hover lift/shadow intensity, and how strongly this widget answers the cursor (near layers respond more) */
   depth: number;
-  /** 0-1, scales cursor-driven translate/tilt against the global max */
+  /** 0-1, scales the ambient wide-field parallax against the global max */
   parallaxStrength: number;
   /** seconds, entrance stagger delay */
   entranceDelay: number;
   /** hover scale factor, e.g. 1.03 */
   hoverScale: number;
-  /** px, amplitude of the continuous idle float */
-  floatAmplitude: number;
-  /** seconds, duration of one idle float cycle */
-  floatDuration: number;
-  /** seconds, phase offset so cards don't float in sync */
-  floatDelay: number;
+  /** relative weight fed into the settle spring's mass — heavier widgets drift less and return home more slowly */
+  mass: number;
+  /** px, radius of the continuous idle drift around the widget's home position */
+  driftRadius: number;
+  /** seconds, base cycle length of the procedural drift (longer = slower, heavier-feeling) */
+  driftSpeed: number;
 };
 
 export type FloatingObjectConfig = {

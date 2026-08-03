@@ -2,7 +2,7 @@ export default function FloatingCardContent({ id }: { id: string }) {
   switch (id) {
     case "projects":
       return (
-        <div className="flex h-full w-full flex-col justify-between p-4">
+        <div className="flex h-full w-full flex-col justify-between p-3.5">
           <span className="w-fit rounded-full border border-zinc-200 px-2 py-0.5 text-[10px] font-medium tracking-wide text-zinc-500">
             Live Project
           </span>

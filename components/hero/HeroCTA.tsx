@@ -1,15 +1,19 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import Button from "@/components/ui/Button";
+import Magnetic from "@/components/system/Magnetic";
+import { useAmbientParallax } from "@/components/system/useAmbientParallax";
+import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
 import { EASE_SIGNATURE } from "@/lib/motion";
 
 export default function HeroCTA() {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useSettledReducedMotion();
+  const { x, y } = useAmbientParallax(1.2, 10);
 
   return (
-    <motion.a
-      href="#projects"
-      className="rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 hover:bg-zinc-700"
+    <motion.div
+      style={{ x, y }}
       initial={prefersReducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={
@@ -18,7 +22,11 @@ export default function HeroCTA() {
           : { duration: 0.6, delay: 0.55, ease: EASE_SIGNATURE }
       }
     >
-      See the work
-    </motion.a>
+      <Magnetic>
+        <Button href="#projects" variant="primary">
+          See the work
+        </Button>
+      </Magnetic>
+    </motion.div>
   );
 }

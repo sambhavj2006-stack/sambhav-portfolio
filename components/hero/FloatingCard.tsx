@@ -1,20 +1,29 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import {
   motion,
   useMotionValue,
-  useReducedMotion,
+  useMotionValueEvent,
   useSpring,
   useTransform,
 } from "motion/react";
 import { CursorContext } from "./cursor-context";
 import FloatingCardContent from "./FloatingCardContent";
 import { EASE_SIGNATURE, SPRING_TRANSITION } from "@/lib/motion";
+import { createDriftPhase, organicWave } from "@/lib/noise";
+import { useSurfaceField } from "@/components/system/useSurfaceField";
 import type { FloatingObjectConfig } from "@/types/floating-object";
 
-const MAX_TRANSLATE = 8;
-const MAX_TILT = 3;
+/** ambient wide-field parallax, from normalized cursor position across the whole Hero */
+const MAX_AMBIENT_TRANSLATE = 8;
+const MAX_AMBIENT_TILT = 0.6; // deg — half of the ±1° micro-rotation budget
+const MAX_DRIFT_TILT = 0.4; // deg — the other half, from procedural drift
+const MAX_MICRO_TILT = 0.6; // deg — rotateX/rotateY budget, scaled by depth
+
+/** local cursor-repulsion — the widget leans away as the pointer approaches, spring back on exit */
+const REPULSION_RADIUS = 220;
+const MAX_REPULSION = 18;
 
 const TIER_STYLES: Record<
   FloatingObjectConfig["tier"],
@@ -69,46 +78,147 @@ export default function FloatingCard({
   animation,
 }: FloatingObjectConfig) {
   const cursor = useContext(CursorContext);
-  const prefersReducedMotion = useReducedMotion();
+  const field = useSurfaceField();
   const {
     depth,
     parallaxStrength,
     entranceDelay,
     hoverScale,
-    floatAmplitude,
-    floatDuration,
-    floatDelay,
+    mass,
+    driftRadius,
+    driftSpeed,
   } = animation;
   const tierStyle = TIER_STYLES[tier];
+
+  const homeRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+
+  useEffect(() => {
+    const el = homeRef.current;
+    if (!el) return;
+    const measure = () => {
+      rectRef.current = el.getBoundingClientRect();
+    };
+    measure();
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(el);
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", measure);
+    };
+  }, []);
+
+  // Stable per-widget noise phases, so no two cards breathe or tumble in sync.
+  const phase = useMemo(() => createDriftPhase(id), [id]);
+  const rxPhase = useMemo(() => createDriftPhase(`${id}:rx`), [id]);
+  const ryPhase = useMemo(() => createDriftPhase(`${id}:ry`), [id]);
+
+  // Procedural drift is non-zero even at t=0, so it must never render during SSR — the
+  // server and the client's first paint have to agree exactly, or hydration mismatches.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+  const prefersReducedMotion = Boolean(field?.prefersReducedMotion);
+  // Entrance keyframes are static numbers, safe pre-hydration; the continuously computed
+  // drift/repulsion transform below is not, so only it waits on `mounted`.
+  const entranceActive = !prefersReducedMotion;
+  const engineActive = mounted && Boolean(field) && !prefersReducedMotion;
 
   const fallbackMouseX = useMotionValue(0);
   const fallbackMouseY = useMotionValue(0);
   const mouseX = cursor?.mouseX ?? fallbackMouseX;
   const mouseY = cursor?.mouseY ?? fallbackMouseY;
 
-  const active = Boolean(cursor) && !prefersReducedMotion;
-  const rawX = useTransform(
+  // Ambient wide-field parallax — near layers (higher depth) answer the cursor more.
+  const ambientX = useTransform(
     mouseX,
     [-1, 1],
-    [-MAX_TRANSLATE * parallaxStrength, MAX_TRANSLATE * parallaxStrength]
+    [-MAX_AMBIENT_TRANSLATE * parallaxStrength, MAX_AMBIENT_TRANSLATE * parallaxStrength]
   );
-  const rawY = useTransform(
+  const ambientY = useTransform(
     mouseY,
     [-1, 1],
-    [-MAX_TRANSLATE * parallaxStrength, MAX_TRANSLATE * parallaxStrength]
+    [-MAX_AMBIENT_TRANSLATE * parallaxStrength, MAX_AMBIENT_TRANSLATE * parallaxStrength]
   );
-  const rawRotate = useTransform(
+  const ambientRotateZ = useTransform(
     mouseX,
     [-1, 1],
-    [-MAX_TILT * parallaxStrength, MAX_TILT * parallaxStrength]
+    [-MAX_AMBIENT_TILT * parallaxStrength, MAX_AMBIENT_TILT * parallaxStrength]
   );
 
-  const springX = useSpring(rawX, SPRING_TRANSITION);
-  const springY = useSpring(rawY, SPRING_TRANSITION);
-  const springRotate = useSpring(rawRotate, SPRING_TRANSITION);
+  // Local repulsion — computed from real screen distance, not the normalized ambient field.
+  const pushX = useMotionValue(0);
+  const pushY = useMotionValue(0);
+
+  const applyRepulsion = () => {
+    if (!field) return;
+    const rect = rectRef.current;
+    if (!rect || field.presence.get() === 0) {
+      pushX.set(0);
+      pushY.set(0);
+      return;
+    }
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = cx - field.x.get();
+    const dy = cy - field.y.get();
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < REPULSION_RADIUS && dist > 0.001) {
+      const falloff = 1 - dist / REPULSION_RADIUS;
+      const strength = falloff * MAX_REPULSION * (0.4 + depth * 0.6);
+      pushX.set((dx / dist) * strength);
+      pushY.set((dy / dist) * strength);
+    } else {
+      pushX.set(0);
+      pushY.set(0);
+    }
+  };
+
+  useMotionValueEvent(field?.x ?? pushX, "change", applyRepulsion);
+  useMotionValueEvent(field?.y ?? pushY, "change", applyRepulsion);
+
+  // Ambient parallax + repulsion settle through one mass-tuned spring — heavier widgets
+  // (higher `mass`) drift less and take longer to arrive, exactly like real inertia.
+  const settleSpring = { ...SPRING_TRANSITION, mass };
+  const combinedX = useTransform([ambientX, pushX], ([a, p]) => (a as number) + (p as number));
+  const combinedY = useTransform([ambientY, pushY], ([a, p]) => (a as number) + (p as number));
+  const springX = useSpring(combinedX, settleSpring);
+  const springY = useSpring(combinedY, settleSpring);
+  const springRotateZ = useSpring(ambientRotateZ, settleSpring);
+
+  // Procedural drift — three layered sine waves per axis, unique phase per widget, driven
+  // by the engine's shared clock. This is what replaces the old repeating keyframe float.
+  const fallbackClock = useMotionValue(0);
+  const clock = field?.elapsed ?? fallbackClock;
+  const driftX = useTransform(clock, (t) =>
+    engineActive ? organicWave(t, phase.x, driftSpeed) * driftRadius : 0
+  );
+  const driftY = useTransform(clock, (t) =>
+    engineActive ? organicWave(t, phase.y, driftSpeed * 1.15) * driftRadius * 0.85 : 0
+  );
+  const driftRotateZ = useTransform(clock, (t) =>
+    engineActive ? organicWave(t, phase.z, driftSpeed * 0.8) * MAX_DRIFT_TILT : 0
+  );
+  const driftRotateX = useTransform(clock, (t) =>
+    engineActive ? organicWave(t, rxPhase.x, driftSpeed * 1.3) * MAX_MICRO_TILT * depth : 0
+  );
+  const driftRotateY = useTransform(clock, (t) =>
+    engineActive ? organicWave(t, ryPhase.y, driftSpeed * 1.5) * MAX_MICRO_TILT * depth : 0
+  );
+
+  const finalX = useTransform([springX, driftX], ([s, d]) => (s as number) + (d as number));
+  const finalY = useTransform([springY, driftY], ([s, d]) => (s as number) + (d as number));
+  const finalRotateZ = useTransform(
+    [springRotateZ, driftRotateZ],
+    ([s, d]) => (s as number) + (d as number)
+  );
 
   return (
     <motion.div
+      ref={homeRef}
       aria-hidden="true"
       className={`pointer-events-none absolute ${
         hideOnMobile
@@ -125,43 +235,31 @@ export default function FloatingCard({
         width,
         height,
       }}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+      initial={entranceActive ? { opacity: 0, y: 12 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : { duration: 0.6, delay: entranceDelay, ease: EASE_SIGNATURE }
+        entranceActive
+          ? { duration: 0.6, delay: entranceDelay, ease: EASE_SIGNATURE }
+          : { duration: 0 }
       }
     >
       <motion.div
         className="h-full w-full"
-        animate={
-          prefersReducedMotion
-            ? undefined
-            : {
-                y: [0, -floatAmplitude, 0],
-                x: [0, floatAmplitude * 0.4, 0],
+        style={
+          engineActive
+            ? {
+                x: finalX,
+                y: finalY,
+                rotateX: driftRotateX,
+                rotateY: driftRotateY,
+                rotateZ: finalRotateZ,
+                transformPerspective: 800,
               }
-        }
-        transition={
-          prefersReducedMotion
-            ? undefined
-            : {
-                duration: floatDuration,
-                delay: floatDelay,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut",
-              }
+            : undefined
         }
       >
         <motion.div
           className={`pointer-events-auto h-full w-full rounded-2xl border ${tierStyle.border} ${tierStyle.surface} ${tierStyle.shadow}`}
-          style={
-            active
-              ? { x: springX, y: springY, rotate: springRotate }
-              : undefined
-          }
           whileHover={{
             scale: hoverScale,
             y: -4 * depth,
