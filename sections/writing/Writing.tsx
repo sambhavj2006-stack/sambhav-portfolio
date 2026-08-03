@@ -25,7 +25,7 @@ export default function Writing() {
     >
       <BackgroundGrid className="opacity-60" />
       <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-12 text-center">
-        <Reveal>
+        <Reveal blur>
           <SectionHeading
             eyebrow="Writing"
             heading="Building in public, one post at a time."

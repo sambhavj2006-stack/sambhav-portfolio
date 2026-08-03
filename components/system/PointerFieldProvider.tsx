@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useMotionValue, useScroll } from "motion/react";
 import { PointerFieldContext, type PointerFieldValue } from "./PointerFieldContext";
 import { useSettledReducedMotion } from "./useSettledReducedMotion";
@@ -33,10 +33,14 @@ export default function PointerFieldProvider({
   const presence = useMotionValue(0);
   const elapsed = useMotionValue(0);
   const { scrollYProgress: scrollProgress } = useScroll();
-  // Internal only (never rendered), so reading window during the client's first
-  // render can't cause a hydration mismatch — it just decides listener wiring below.
-  const [isCoarsePointer] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(pointer: coarse)").matches : false
+  // useSyncExternalStore guarantees the SERVER snapshot (false) is used for the client's
+  // first paint too, then resyncs to the real matchMedia value right after hydration —
+  // unlike a plain useState lazy initializer, which reads matchMedia synchronously on the
+  // client's very first render and can disagree with the server, causing a mismatch.
+  const isCoarsePointer = useSyncExternalStore(
+    () => () => {},
+    () => window.matchMedia("(pointer: coarse)").matches,
+    () => false
   );
 
   useEffect(() => {

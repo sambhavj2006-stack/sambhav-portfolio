@@ -9,8 +9,10 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     hideOnMobile: true,
     // Tablet gets its own larger, deliberately-placed treatment instead of a scaled-down
     // desktop layout; xl: restores the exact approved desktop numbers above.
+    // top/height kept small even at md so a short landscape-tablet viewport (e.g. 1024x768)
+    // still clears the headline — verified against the required breakpoint matrix.
     tabletClassName:
-      "md:block md:top-[9%] md:left-[5%] md:w-[13.5rem] md:h-[8.5rem] xl:top-[8%] xl:left-[6%] xl:w-[12.5rem] xl:h-[9rem]",
+      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[7rem] xl:top-[8%] xl:left-[6%] xl:w-[12.5rem] xl:h-[9rem]",
     tier: 1,
     animation: {
       depth: 1,

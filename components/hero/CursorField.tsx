@@ -6,6 +6,7 @@ import { useSurfaceField } from "@/components/system/useSurfaceField";
 import { CursorContext } from "./cursor-context";
 import FloatingCard from "./FloatingCard";
 import CursorGlow from "./CursorGlow";
+import CursorCoordinates from "./CursorCoordinates";
 import type { FloatingObjectConfig } from "@/types/floating-object";
 
 const GLOW_SIZE = 640;
@@ -26,6 +27,8 @@ export default function CursorField({
   const mouseY = useMotionValue(0);
   const glowX = useMotionValue(0);
   const glowY = useMotionValue(0);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
   // field.prefersReducedMotion is already hydration-safe (settled post-mount at the
   // engine's source), so it's fine to trust directly here.
   const prefersReducedMotion = Boolean(field?.prefersReducedMotion);
@@ -68,6 +71,8 @@ export default function CursorField({
     mouseY.set(clamp(relY, -1, 1));
     glowX.set(clientX - rect.left - GLOW_SIZE / 2);
     glowY.set(clientY - rect.top - GLOW_SIZE / 2);
+    pointerX.set(clientX - rect.left);
+    pointerY.set(clientY - rect.top);
   };
 
   useMotionValueEvent(field?.x ?? mouseX, "change", applyFromField);
@@ -79,8 +84,11 @@ export default function CursorField({
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <CursorContext.Provider value={{ mouseX, mouseY, glowX, glowY }}>
+      <CursorContext.Provider
+        value={{ mouseX, mouseY, glowX, glowY, pointerX, pointerY }}
+      >
         {!prefersReducedMotion && field && <CursorGlow />}
+        {!prefersReducedMotion && field && <CursorCoordinates />}
         {objects.map((object) => (
           <FloatingCard key={object.id} {...object} />
         ))}

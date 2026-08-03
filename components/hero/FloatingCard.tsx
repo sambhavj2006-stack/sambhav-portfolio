@@ -157,7 +157,7 @@ export default function FloatingCard({
   const applyRepulsion = () => {
     if (!field) return;
     const rect = rectRef.current;
-    if (!rect || field.presence.get() === 0) {
+    if (!rect || rect.width === 0 || field.presence.get() === 0) {
       pushX.set(0);
       pushY.set(0);
       return;
@@ -192,22 +192,36 @@ export default function FloatingCard({
 
   // Procedural drift — three layered sine waves per axis, unique phase per widget, driven
   // by the engine's shared clock. This is what replaces the old repeating keyframe float.
+  //
+  // Performance: 3 of these 5 widgets stay `display:none` until xl (see visibilityClassName
+  // below), but the shared clock ticks every rAF frame for the whole page regardless — so
+  // every mounted card, hidden or not, would otherwise keep recomputing 5 sine-wave chains
+  // 60x/second for nothing. `isVisible()` reads the last measured rect (already tracked for
+  // repulsion, refreshed by the ResizeObserver above whenever a breakpoint flips the card's
+  // display on/off) and skips the trig work entirely while the box has no area.
+  const isVisible = () => (rectRef.current?.width ?? 0) > 0;
   const fallbackClock = useMotionValue(0);
   const clock = field?.elapsed ?? fallbackClock;
   const driftX = useTransform(clock, (t) =>
-    engineActive ? organicWave(t, phase.x, driftSpeed) * driftRadius : 0
+    engineActive && isVisible() ? organicWave(t, phase.x, driftSpeed) * driftRadius : 0
   );
   const driftY = useTransform(clock, (t) =>
-    engineActive ? organicWave(t, phase.y, driftSpeed * 1.15) * driftRadius * 0.85 : 0
+    engineActive && isVisible()
+      ? organicWave(t, phase.y, driftSpeed * 1.15) * driftRadius * 0.85
+      : 0
   );
   const driftRotateZ = useTransform(clock, (t) =>
-    engineActive ? organicWave(t, phase.z, driftSpeed * 0.8) * MAX_DRIFT_TILT : 0
+    engineActive && isVisible() ? organicWave(t, phase.z, driftSpeed * 0.8) * MAX_DRIFT_TILT : 0
   );
   const driftRotateX = useTransform(clock, (t) =>
-    engineActive ? organicWave(t, rxPhase.x, driftSpeed * 1.3) * MAX_MICRO_TILT * depth : 0
+    engineActive && isVisible()
+      ? organicWave(t, rxPhase.x, driftSpeed * 1.3) * MAX_MICRO_TILT * depth
+      : 0
   );
   const driftRotateY = useTransform(clock, (t) =>
-    engineActive ? organicWave(t, ryPhase.y, driftSpeed * 1.5) * MAX_MICRO_TILT * depth : 0
+    engineActive && isVisible()
+      ? organicWave(t, ryPhase.y, driftSpeed * 1.5) * MAX_MICRO_TILT * depth
+      : 0
   );
 
   const finalX = useTransform([springX, driftX], ([s, d]) => (s as number) + (d as number));
@@ -278,6 +292,7 @@ export default function FloatingCard({
         }
       >
         <motion.div
+          data-cursor="view"
           className={`pointer-events-auto h-full w-full rounded-2xl border ${tierStyle.border} ${tierStyle.surface} ${tierStyle.shadow}`}
           whileHover={{
             scale: hoverScale,

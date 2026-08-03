@@ -44,6 +44,7 @@ export default function Button({
       rel={external ? "noopener noreferrer" : undefined}
       className={`inline-flex items-center justify-center ${VARIANT_STYLES[variant]} ${className}`}
       whileHover={prefersReducedMotion ? undefined : HOVER_ELEVATION[variant]}
+      whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
       transition={SPRING_TRANSITION}
     >
       {children}

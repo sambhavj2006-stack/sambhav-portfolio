@@ -23,7 +23,24 @@ const RIPPLE_LIFE = 900; // ms
 const RIPPLE_BAND = 48; // px, width of the traveling ring
 const RIPPLE_INTENSITY = 0.85;
 
+const INK_LIFE = 500; // ms
+const INK_MIN_SPACING = 8; // px, only add a new ink point once the cursor has moved this far
+const INK_MAX_POINTS = 20;
+
 type Ripple = { x: number; y: number; start: number };
+type InkPoint = { x: number; y: number; start: number };
+
+/**
+ * Grid density adapts to viewport width — the same cell size that reads as a refined
+ * drafting texture on desktop becomes visual clutter on a phone. Widening the cells
+ * (not the line weight/opacity) keeps the "engineering surface" language intact while
+ * halving-ish the intersection count on small screens.
+ */
+function densityScaleForWidth(viewportWidth: number) {
+  if (viewportWidth < 480) return 1.6;
+  if (viewportWidth < 768) return 1.35;
+  return 1;
+}
 
 /**
  * Sambhav OS surface field: a faint canvas grid that sits behind section content.
@@ -55,9 +72,13 @@ export default function BackgroundGrid({
     let height = 0;
     let cols = 0;
     let rows = 0;
+    let effectiveCellSize = cellSize;
     let points = new Float32Array(0);
     let activation = new Float32Array(0);
     let ripples: Ripple[] = [];
+    let ink: InkPoint[] = [];
+    let lastInkX = -Infinity;
+    let lastInkY = -Infinity;
 
     let lastMoveAt = 0;
     let rafId: number | null = null;
@@ -69,12 +90,12 @@ export default function BackgroundGrid({
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let c = 0; c <= cols; c++) {
-        const x = Math.round(c * cellSize) + 0.5;
+        const x = Math.round(c * effectiveCellSize) + 0.5;
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
       }
       for (let r = 0; r <= rows; r++) {
-        const y = Math.round(r * cellSize) + 0.5;
+        const y = Math.round(r * effectiveCellSize) + 0.5;
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
       }
@@ -91,6 +112,7 @@ export default function BackgroundGrid({
       containerRect = rect;
       width = rect.width;
       height = rect.height;
+      effectiveCellSize = cellSize * densityScaleForWidth(window.innerWidth);
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
@@ -98,16 +120,16 @@ export default function BackgroundGrid({
       canvas!.style.height = `${height}px`;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      cols = Math.ceil(width / cellSize);
-      rows = Math.ceil(height / cellSize);
+      cols = Math.ceil(width / effectiveCellSize);
+      rows = Math.ceil(height / effectiveCellSize);
       const count = (cols + 1) * (rows + 1);
       points = new Float32Array(count * 2);
       activation = new Float32Array(count);
       let i = 0;
       for (let r = 0; r <= rows; r++) {
         for (let c = 0; c <= cols; c++) {
-          points[i * 2] = c * cellSize;
-          points[i * 2 + 1] = r * cellSize;
+          points[i * 2] = c * effectiveCellSize;
+          points[i * 2 + 1] = r * effectiveCellSize;
           i++;
         }
       }
@@ -129,8 +151,42 @@ export default function BackgroundGrid({
         ripples = ripples.filter((r) => now - r.start <= RIPPLE_LIFE);
       }
 
+      // Procedural ink: a short trail of the cursor's actual (un-snapped) path, distinct
+      // from the grid's snapped-dot proximity glow — only recorded while really moving.
+      if (
+        speed > 0.05 &&
+        mouseX > -Infinity &&
+        mouseX >= 0 &&
+        mouseX <= width &&
+        mouseY >= 0 &&
+        mouseY <= height
+      ) {
+        const dxInk = mouseX - lastInkX;
+        const dyInk = mouseY - lastInkY;
+        if (Math.sqrt(dxInk * dxInk + dyInk * dyInk) >= INK_MIN_SPACING) {
+          ink.push({ x: mouseX, y: mouseY, start: now });
+          if (ink.length > INK_MAX_POINTS) ink.shift();
+          lastInkX = mouseX;
+          lastInkY = mouseY;
+        }
+      }
+      if (ink.length) {
+        ink = ink.filter((point) => now - point.start <= INK_LIFE);
+      }
+
       ctx!.clearRect(0, 0, width, height);
       drawGridLines();
+
+      for (const point of ink) {
+        const age = (now - point.start) / INK_LIFE;
+        const alpha = (1 - age) * 0.14;
+        const radius = 2.75 - age * 2;
+        if (alpha <= 0.004 || radius <= 0) continue;
+        ctx!.beginPath();
+        ctx!.fillStyle = `rgba(0,0,0,${alpha.toFixed(3)})`;
+        ctx!.arc(point.x, point.y, radius, 0, Math.PI * 2);
+        ctx!.fill();
+      }
 
       let maxActivation = 0;
       const n = activation.length;
@@ -174,7 +230,10 @@ export default function BackgroundGrid({
       }
 
       const idle =
-        now - lastMoveAt > IDLE_TIMEOUT && maxActivation < 0.01 && ripples.length === 0;
+        now - lastMoveAt > IDLE_TIMEOUT &&
+        maxActivation < 0.01 &&
+        ripples.length === 0 &&
+        ink.length === 0;
       if (!idle) rafId = requestAnimationFrame(frame);
     }
 

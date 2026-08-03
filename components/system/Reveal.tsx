@@ -13,6 +13,8 @@ type RevealProps = {
   delay?: number;
   /** px, how far the content rises into place */
   distance?: number;
+  /** cinematic entrance for major headlines — content resolves into focus as it rises */
+  blur?: boolean;
   className?: string;
   as?: RevealTag;
 };
@@ -26,19 +28,26 @@ export default function Reveal({
   children,
   delay = 0,
   distance = 16,
+  blur = false,
   className,
   as = "div",
 }: RevealProps) {
   const prefersReducedMotion = useSettledReducedMotion();
   const MotionTag = motion[as];
 
+  const initial = prefersReducedMotion
+    ? false
+    : blur
+      ? { opacity: 0, y: distance, filter: "blur(6px)" }
+      : { opacity: 0, y: distance };
+
   return (
     <MotionTag
       className={className}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: distance }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={initial}
+      whileInView={blur ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 1, y: 0 }}
       viewport={REVEAL_VIEWPORT}
-      transition={{ duration: 0.6, delay, ease: EASE_SIGNATURE }}
+      transition={{ duration: blur ? 0.8 : 0.6, delay, ease: EASE_SIGNATURE }}
     >
       {children}
     </MotionTag>

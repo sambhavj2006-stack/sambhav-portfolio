@@ -2,7 +2,7 @@ import Reveal from "@/components/system/Reveal";
 
 export default function JourneyHeader() {
   return (
-    <Reveal className="flex flex-col gap-4">
+    <Reveal blur className="flex flex-col gap-4">
       <span className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">
         Journey
       </span>

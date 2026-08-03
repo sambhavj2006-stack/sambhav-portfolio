@@ -16,7 +16,7 @@ export default function Awards() {
     >
       <BackgroundGrid className="opacity-60" />
       <div className="relative mx-auto flex max-w-7xl flex-col gap-16">
-        <Reveal>
+        <Reveal blur>
           <SectionHeading
             eyebrow="Awards"
             heading="Recognition along the way."

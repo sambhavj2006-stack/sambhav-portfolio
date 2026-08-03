@@ -4,7 +4,7 @@ import { contactContent } from "@/data/contact";
 
 export default function ContactHeader() {
   return (
-    <Reveal>
+    <Reveal blur>
       <SectionHeading
         heading={contactContent.headline}
         description={contactContent.description}

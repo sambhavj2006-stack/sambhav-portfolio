@@ -18,6 +18,7 @@ export default function InfoCard({
 }: InfoCardProps) {
   return (
     <div
+      data-cursor="view"
       className={`flex h-full flex-col gap-3 rounded-2xl border border-zinc-200 bg-neutral-50 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_24px_-8px_rgba(0,0,0,0.09)] ${className}`}
     >
       <span className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">

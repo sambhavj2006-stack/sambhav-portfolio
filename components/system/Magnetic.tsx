@@ -72,12 +72,32 @@ export default function Magnetic({
   useMotionValueEvent(field?.x ?? pullX, "change", applyPull);
   useMotionValueEvent(field?.y ?? pullY, "change", applyPull);
 
-  if (!field || field.prefersReducedMotion || field.isCoarsePointer) {
+  if (!field || field.prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
 
+  // No cursor to feel on a touch device, so the magnetic pull has no equivalent — instead
+  // the target yields slightly under the finger, the same overdamped spring giving it the
+  // tap its own tactile weight.
+  if (field.isCoarsePointer) {
+    return (
+      <motion.div
+        className={className}
+        whileTap={{ scale: 0.94 }}
+        transition={MAGNETIC_SPRING}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
-    <motion.div ref={ref} className={className} style={{ x: springX, y: springY }}>
+    <motion.div
+      ref={ref}
+      data-cursor="pull"
+      className={className}
+      style={{ x: springX, y: springY }}
+    >
       {children}
     </motion.div>
   );

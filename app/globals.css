@@ -41,3 +41,12 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* CursorInstrument replaces the system arrow with its own ring + dot — only once it has
+   confirmed a fine pointer and no reduced-motion preference (see CursorInstrument.tsx). */
+@media (pointer: fine) {
+  html.cursor-instrument-active,
+  html.cursor-instrument-active * {
+    cursor: none !important;
+  }
+}
