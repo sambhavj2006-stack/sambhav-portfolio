@@ -34,6 +34,7 @@ export default function Builds() {
                 title={project.title}
                 subtitle={project.subtitle}
                 range={project.range}
+                markName={project.markName}
                 className="h-full"
               />
             </Reveal>

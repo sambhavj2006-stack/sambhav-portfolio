@@ -1,4 +1,5 @@
 import Reveal from "@/components/system/Reveal";
+import OrgMark from "@/components/ui/OrgMark";
 import type { JourneyMilestone as JourneyMilestoneType } from "@/types/journey-milestone";
 
 const STAGGER = 0.08;
@@ -17,14 +18,17 @@ export default function JourneyMilestone({
       delay={Math.min(index * STAGGER, MAX_STAGGER_DELAY)}
     >
       <span className="text-sm text-zinc-500 lg:col-span-3">{range}</span>
-      <div className="flex flex-col gap-1 lg:col-span-9">
-        <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
-        <span className="text-sm font-medium text-zinc-600">
-          {organization}
-        </span>
-        {description && (
-          <p className="mt-2 max-w-2xl text-sm text-zinc-500">{description}</p>
-        )}
+      <div className="flex gap-4 lg:col-span-9">
+        <OrgMark name={organization} className="mt-0.5" />
+        <div className="flex flex-col gap-1">
+          <h3 className="text-lg font-semibold text-zinc-900">{title}</h3>
+          <span className="text-sm font-medium text-zinc-600">
+            {organization}
+          </span>
+          {description && (
+            <p className="mt-2 max-w-2xl text-sm text-zinc-500">{description}</p>
+          )}
+        </div>
       </div>
     </Reveal>
   );

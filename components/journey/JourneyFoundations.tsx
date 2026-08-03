@@ -1,4 +1,5 @@
 import Reveal from "@/components/system/Reveal";
+import OrgMark from "@/components/ui/OrgMark";
 import { educationEntries } from "@/data/education";
 import { volunteerEntries } from "@/data/volunteering";
 
@@ -12,15 +13,18 @@ export default function JourneyFoundations() {
         </span>
         <ul className="flex flex-col gap-5">
           {educationEntries.map((entry) => (
-            <li key={entry.id} className="flex flex-col gap-0.5">
-              <span className="text-sm font-semibold text-zinc-900">
-                {entry.institution}
-              </span>
-              <span className="text-sm text-zinc-600">{entry.program}</span>
-              <span className="text-xs text-zinc-500">
-                {entry.range}
-                {entry.detail ? ` · ${entry.detail}` : ""}
-              </span>
+            <li key={entry.id} className="flex gap-3">
+              <OrgMark name={entry.institution} className="mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-semibold text-zinc-900">
+                  {entry.institution}
+                </span>
+                <span className="text-sm text-zinc-600">{entry.program}</span>
+                <span className="text-xs text-zinc-500">
+                  {entry.range}
+                  {entry.detail ? ` · ${entry.detail}` : ""}
+                </span>
+              </div>
             </li>
           ))}
         </ul>
@@ -32,14 +36,17 @@ export default function JourneyFoundations() {
         </span>
         <ul className="flex flex-col gap-5">
           {volunteerEntries.map((entry) => (
-            <li key={entry.id} className="flex flex-col gap-0.5">
-              <span className="text-sm font-semibold text-zinc-900">
-                {entry.organization}
-              </span>
-              <span className="text-sm text-zinc-600">{entry.role}</span>
-              {entry.range && (
-                <span className="text-xs text-zinc-500">{entry.range}</span>
-              )}
+            <li key={entry.id} className="flex gap-3">
+              <OrgMark name={entry.organization} className="mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-semibold text-zinc-900">
+                  {entry.organization}
+                </span>
+                <span className="text-sm text-zinc-600">{entry.role}</span>
+                {entry.range && (
+                  <span className="text-xs text-zinc-500">{entry.range}</span>
+                )}
+              </div>
             </li>
           ))}
         </ul>

@@ -6,18 +6,21 @@ export const projects: Project[] = [
     title: "Grandeur Industry Primer",
     subtitle: "Second Edition",
     range: "February 2026 — April 2026",
+    markName: "Grandeur",
   },
   {
     id: "industry-primer-first-edition",
     title: "Grandeur Industry Primer",
     subtitle: "First Edition",
     range: "April 2025 — August 2025",
+    markName: "Grandeur",
   },
   {
     id: "beyond-color",
     title: "Beyond Color",
     subtitle: "Unpacking Asian Paints",
     range: "May 2025 — July 2025",
+    markName: "Asian Paints",
   },
   {
     id: "dna-economy",

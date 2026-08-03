@@ -3,4 +3,6 @@ export type Award = {
   title: string;
   subtitle?: string;
   range: string;
+  /** hosting organization/institution, for the card's monogram mark */
+  markName?: string;
 };
