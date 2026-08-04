@@ -36,6 +36,7 @@ export default function Awards() {
                 subtitle={award.subtitle}
                 range={award.range}
                 markName={award.markName}
+                photo={award.photo}
                 className="h-full"
               />
             </Reveal>

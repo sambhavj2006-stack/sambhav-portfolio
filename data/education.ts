@@ -6,7 +6,6 @@ export const educationEntries: EducationEntry[] = [
     institution: "Shaheed Sukhdev College of Business Studies",
     program: "Bachelor of Management Studies",
     range: "July 2024 — July 2027",
-    detail: "CGPA 8.79 · Semester 1 SGPA 9.09",
   },
   {
     id: "bal-bharati",

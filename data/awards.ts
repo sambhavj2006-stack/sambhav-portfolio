@@ -29,6 +29,10 @@ export const awards: Award[] = [
     subtitle: "IIM Rohtak · IIM Kozhikode · Masters' Union · Gargi College · SRCC",
     range: "May 2025",
     markName: "IIM Rohtak",
+    photo: {
+      src: "/photos/awards/presentation.jpeg",
+      alt: "Presenting the final round at Masters' Union",
+    },
   },
   {
     id: "kirori-mal",
@@ -50,6 +54,10 @@ export const awards: Award[] = [
     subtitle: "Envisage · Hindu College",
     range: "February 2025",
     markName: "Hindu College",
+    photo: {
+      src: "/photos/awards/award.jpeg",
+      alt: "Receiving the award on stage at Contrivance '25",
+    },
   },
   {
     id: "mdi-gurgaon",
@@ -64,22 +72,5 @@ export const awards: Award[] = [
     subtitle: "What's the Logic · IIM Calcutta",
     range: "December 2024",
     markName: "IIM Calcutta",
-  },
-  {
-    id: "heritage-pride",
-    title: "Winner",
-    subtitle: "Heritage & Pride HR Simulation",
-    range: "September 2024",
-  },
-  {
-    id: "vishaya-kaushal",
-    title: "Vishaya Kaushal Award",
-    range: "May 2023",
-  },
-  {
-    id: "road-show",
-    title: "Second Position",
-    subtitle: "Road Show Competition",
-    range: "November 2022",
   },
 ];

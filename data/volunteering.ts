@@ -19,9 +19,4 @@ export const volunteerEntries: VolunteerEntry[] = [
     role: "Volunteer",
     range: "September 2022",
   },
-  {
-    id: "aap-media",
-    organization: "AAP Media Pvt Ltd",
-    role: "Volunteer",
-  },
 ];

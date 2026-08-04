@@ -18,15 +18,15 @@ export const contactContent: ContactContent = {
     href: LINKS.linkedin,
   },
   availability: {
-    title: "Currently",
+    title: "Now",
     items: [
-      "President — Grandeur, SSCBS",
-      "Consulting Director — Harbor & Holt",
-      "Project Lead — KRAFTON India & Honasa Consumer",
-      "Founder — Clarifyd",
-      "Open to consulting & strategy conversations",
+      { role: "President", organization: "Grandeur" },
+      { role: "Consulting Director", organization: "Harbor & Holt" },
+      { role: "Project Lead", organization: "KRAFTON India & Honasa" },
+      { role: "Founder", organization: "Clarifyd" },
     ],
-    statusText: "Available for conversations.",
+    openFor: ["Consulting", "Strategy", "Collaborations"],
+    statusText: "Open for conversations",
   },
   footer: {
     copyright: "© 2026",

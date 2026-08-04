@@ -8,6 +8,6 @@ export const numbers: Stat[] = [
   { id: "engagements", value: "14", label: "Client engagements" },
   { id: "sponsorships", value: "₹5L", label: "Sponsorships raised" },
   { id: "growth", value: "170%", label: "Growth delivered" },
-  { id: "participants", value: "6,000+", label: "Participants reached" },
+  { id: "students-mentored", value: "1,000+", label: "Students mentored" },
   { id: "learning-hours", value: "300+", label: "Learning hours" },
 ];

@@ -5,16 +5,18 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     id: "projects",
     position: { top: "8%", left: "6%" },
     width: "12.5rem",
-    height: "9rem",
+    height: "7.5rem",
     hideOnMobile: true,
     // Tablet (md, 768-1023) gets its own larger, deliberately-placed treatment instead
     // of a scaled-down desktop layout; lg: restores the approved desktop numbers — laptop
     // and true desktop now share the same 5-card layout, differentiated only by motion
     // amplitude (see FloatingCard's motionScaleForWidth), not by which cards show.
     // top/height kept small even at md so a short landscape-tablet viewport (e.g. 1024x768)
-    // still clears the headline — verified against the required breakpoint matrix.
+    // still clears the headline — verified against the required breakpoint matrix. Height
+    // matched to the timeline/writing cards' proportions (~1.6-1.9 aspect), not the taller
+    // near-square shape this card used to have.
     tabletClassName:
-      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[7rem] lg:top-[8%] lg:left-[6%] lg:w-[12.5rem] lg:h-[9rem]",
+      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[6.5rem] lg:top-[8%] lg:left-[6%] lg:w-[12.5rem] lg:h-[7.5rem]",
     tier: 1,
     animation: {
       depth: 1,

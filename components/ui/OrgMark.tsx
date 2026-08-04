@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { getInitials } from "@/lib/text";
+import { getOrgLogo } from "@/lib/org-logos";
 
 type OrgMarkProps = {
   name: string;
@@ -12,20 +14,37 @@ const SIZE_STYLES: Record<NonNullable<OrgMarkProps["size"]>, string> = {
   sm: "h-6 w-6 text-[9px]",
 };
 
+const IMAGE_SIZES: Record<NonNullable<OrgMarkProps["size"]>, string> = {
+  md: "36px",
+  sm: "24px",
+};
+
 /**
- * A small, consistent monogram badge standing in for an organization's mark. Real brand
- * logos aren't reproduced here — an imperfect copy from memory risks exactly the
- * low-quality, inconsistent look a premium site should avoid — so every organization
- * gets the same clean, on-brand vector treatment instead: one visual language, not a
- * patchwork of real and fabricated logos.
+ * A small, consistent badge standing in for an organization's mark. Where a real, official
+ * logo file exists (public/photos/logos, matched in lib/org-logos.ts) it's used directly —
+ * scaled to fit, never stretched. Everywhere else falls back to the generated monogram: an
+ * imperfect copy from memory risks exactly the low-quality, inconsistent look a premium
+ * site should avoid, so unmatched orgs get the clean vector fallback instead of a guess.
  */
 export default function OrgMark({ name, size = "md", className = "" }: OrgMarkProps) {
+  const logo = getOrgLogo(name);
+
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white font-semibold tracking-wide text-zinc-500 ${SIZE_STYLES[size]} ${className}`}
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-zinc-200 bg-white font-semibold tracking-wide text-zinc-500 ${SIZE_STYLES[size]} ${className}`}
     >
-      {getInitials(name)}
+      {logo ? (
+        <Image
+          src={logo.src}
+          alt=""
+          fill
+          sizes={IMAGE_SIZES[size]}
+          className="object-contain p-1.5"
+        />
+      ) : (
+        getInitials(name)
+      )}
     </span>
   );
 }

@@ -10,25 +10,29 @@ export const journeyMilestones: JourneyMilestone[] = [
     description: "Sustainable Water Department",
   },
   {
-    id: "grandeur-junior-consultant",
-    range: "October 2024 — May 2025",
-    title: "Junior Consultant",
-    organization: "Grandeur",
-    description: "Consulting & Knowledge Cell, SSCBS",
-  },
-  {
-    id: "grandeur-coordinator",
-    range: "May 2025 — May 2026",
-    title: "Coordinator",
-    organization: "Grandeur",
-    description: "Consulting & Knowledge Cell, SSCBS",
-  },
-  {
-    id: "grandeur-president",
-    range: "May 2026 — Present",
+    id: "grandeur",
+    range: "October 2024 — Present",
     title: "President",
     organization: "Grandeur",
-    description: "Consulting & Knowledge Cell, SSCBS — leading a 42-member team",
+    description: "Consulting & Knowledge Cell, SSCBS",
+    progression: [
+      {
+        id: "grandeur-junior-consultant",
+        range: "Oct 2024 — May 2025",
+        title: "Junior Consultant",
+      },
+      {
+        id: "grandeur-coordinator",
+        range: "May 2025 — May 2026",
+        title: "Coordinator",
+      },
+      {
+        id: "grandeur-president",
+        range: "May 2026 — Present",
+        title: "President",
+        description: "Leading a 42-member team across all consulting and knowledge operations.",
+      },
+    ],
   },
   {
     id: "harbor-holt",

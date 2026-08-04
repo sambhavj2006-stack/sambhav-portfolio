@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "@/components/system/Reveal";
 import OrgMark from "@/components/ui/OrgMark";
 import { educationEntries } from "@/data/education";
@@ -13,18 +14,30 @@ export default function JourneyFoundations() {
         </span>
         <ul className="flex flex-col gap-5">
           {educationEntries.map((entry) => (
-            <li key={entry.id} className="flex gap-3">
-              <OrgMark name={entry.institution} className="mt-0.5" />
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-semibold text-zinc-900">
-                  {entry.institution}
-                </span>
-                <span className="text-sm text-zinc-600">{entry.program}</span>
-                <span className="text-xs text-zinc-500">
-                  {entry.range}
-                  {entry.detail ? ` · ${entry.detail}` : ""}
-                </span>
+            <li key={entry.id} className="flex items-center justify-between gap-3">
+              <div className="flex gap-3">
+                <OrgMark name={entry.institution} className="mt-0.5" />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {entry.institution}
+                  </span>
+                  <span className="text-sm text-zinc-600">{entry.program}</span>
+                  <span className="text-xs text-zinc-500">
+                    {entry.range}
+                    {entry.detail ? ` · ${entry.detail}` : ""}
+                  </span>
+                </div>
               </div>
+              {entry.photo && (
+                <Image
+                  src={entry.photo.src}
+                  alt={entry.photo.alt}
+                  width={72}
+                  height={72}
+                  loading="lazy"
+                  className="hidden h-16 w-16 shrink-0 rounded-lg border border-zinc-200 object-cover shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_24px_-8px_rgba(0,0,0,0.09)] sm:block"
+                />
+              )}
             </li>
           ))}
         </ul>

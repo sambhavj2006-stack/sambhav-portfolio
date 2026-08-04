@@ -1,6 +1,7 @@
 import { heroFloatingObjects } from "@/data/hero-floating-objects";
 import BackgroundGrid from "@/components/ui/BackgroundGrid";
 import CursorField from "./CursorField";
+import HeroPortrait from "./HeroPortrait";
 import HeroHeading from "./HeroHeading";
 import IdentityChips from "./IdentityChips";
 import HeroCTA from "./HeroCTA";
@@ -15,7 +16,8 @@ export default function Hero() {
       <BackgroundGrid />
       <CursorField objects={heroFloatingObjects} />
 
-      <div className="relative z-10 flex flex-col items-center gap-8 sm:gap-10">
+      <div className="relative z-10 flex flex-col items-center gap-5 sm:gap-6 md:gap-4 lg:gap-4 xl:gap-6 min-[1440px]:gap-8">
+        <HeroPortrait />
         <HeroHeading />
         <IdentityChips />
         <HeroCTA />
