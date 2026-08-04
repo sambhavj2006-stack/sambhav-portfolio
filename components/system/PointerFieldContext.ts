@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import type { MotionValue } from "motion/react";
+import type { CursorVariant } from "@/lib/motionSystem";
 
 /**
  * Sambhav OS — the single source of truth for "where is the input force right now."
@@ -21,6 +22,9 @@ export type PointerFieldValue = {
   elapsed: MotionValue<number>;
   /** 0..1 document scroll progress */
   scrollProgress: MotionValue<number>;
+  /** what kind of surface the pointer is currently over — one `pointerover` listener feeds
+   *  both CursorInstrument (ring/dot shape) and the Hero coordinate readout (visibility) */
+  cursorTarget: MotionValue<CursorVariant>;
   prefersReducedMotion: boolean;
   isCoarsePointer: boolean;
 };

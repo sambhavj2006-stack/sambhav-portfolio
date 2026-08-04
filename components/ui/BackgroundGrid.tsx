@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useSurfaceField } from "@/components/system/useSurfaceField";
+import { organicWave } from "@/lib/noise";
+import { SPRING_GLOW } from "@/lib/motionSystem";
 
 type BackgroundGridProps = {
   /** px between grid lines/intersections */
@@ -57,6 +60,20 @@ export default function BackgroundGrid({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const field = useSurfaceField();
+
+  // Ambient life at rest: a barely-there opacity breath (one very slow layered sine, ~45s
+  // period) and a whisper of cursor parallax (spring-lazy, ≤3px). Both are pure CSS
+  // composited properties on a wrapper above the canvas, never touching the imperative
+  // drawing loop below — so this costs nothing extra even while that loop is idle.
+  const fallback = useMotionValue(0);
+  const animateAmbient = Boolean(field) && !field!.prefersReducedMotion && !field!.isCoarsePointer;
+  const breathOpacity = useTransform(field?.elapsed ?? fallback, (t) =>
+    animateAmbient ? 0.96 + organicWave(t, 0.6, 46) * 0.04 : 1
+  );
+  const rawParallaxX = useTransform(field?.nx ?? fallback, (v) => (animateAmbient ? v * 3 : 0));
+  const rawParallaxY = useTransform(field?.ny ?? fallback, (v) => (animateAmbient ? v * 3 : 0));
+  const parallaxX = useSpring(rawParallaxX, SPRING_GLOW);
+  const parallaxY = useSpring(rawParallaxY, SPRING_GLOW);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -297,7 +314,12 @@ export default function BackgroundGrid({
       aria-hidden="true"
       className={`pointer-events-none absolute inset-0 ${className}`}
     >
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      <motion.div
+        className="h-full w-full"
+        style={{ opacity: breathOpacity, x: parallaxX, y: parallaxY }}
+      >
+        <canvas ref={canvasRef} className="block h-full w-full" />
+      </motion.div>
     </div>
   );
 }

@@ -17,6 +17,8 @@ type RevealProps = {
   blur?: boolean;
   className?: string;
   as?: RevealTag;
+  /** forwarded to the rendered element as `data-cursor`, for the shared cursor-variant system */
+  "data-cursor"?: string;
 };
 
 /**
@@ -31,6 +33,7 @@ export default function Reveal({
   blur = false,
   className,
   as = "div",
+  "data-cursor": dataCursor,
 }: RevealProps) {
   const prefersReducedMotion = useSettledReducedMotion();
   const MotionTag = motion[as];
@@ -44,6 +47,7 @@ export default function Reveal({
   return (
     <MotionTag
       className={className}
+      data-cursor={dataCursor}
       initial={initial}
       whileInView={blur ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 1, y: 0 }}
       viewport={REVEAL_VIEWPORT}

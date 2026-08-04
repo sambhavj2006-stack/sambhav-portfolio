@@ -1,47 +1,27 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
-import { CURSOR_DOT_SPRING, CURSOR_RING_SPRING } from "@/lib/motion";
+import { motion, useMotionValue, useMotionValueEvent, useSpring } from "motion/react";
+import {
+  CURSOR_DOT_SCALE,
+  CURSOR_DOT_SPRING,
+  CURSOR_RING_SCALE,
+  CURSOR_RING_SPRING,
+} from "@/lib/motionSystem";
 import { useSurfaceField } from "./useSurfaceField";
-
-type CursorVariant = "default" | "click" | "pull" | "view";
-
-const RING_SCALE: Record<CursorVariant, number> = {
-  default: 1,
-  click: 1.5,
-  pull: 0.55,
-  view: 2.6,
-};
-
-const DOT_SCALE: Record<CursorVariant, number> = {
-  default: 1,
-  click: 0,
-  pull: 1,
-  view: 0,
-};
-
-function resolveVariant(target: EventTarget | null): CursorVariant {
-  if (!(target instanceof Element)) return "default";
-  const withData = target.closest("[data-cursor]");
-  if (withData) {
-    const value = withData.getAttribute("data-cursor");
-    if (value === "click" || value === "pull" || value === "view") return value;
-  }
-  if (target.closest("a, button")) return "click";
-  return "default";
-}
 
 /**
  * Sambhav OS cursor: the pointer becomes a small instrument — a ring and dot that morph
- * depending on what they're over (a link, a magnetic target, a card) instead of the
- * static system arrow. Position reads off the shared PointerField (no new mousemove
- * listener); variant detection uses one low-frequency `pointerover` listener, which only
- * fires on element-boundary crossings, not continuously.
+ * depending on what they're over (a link, a magnetic target, a card, navigation, the
+ * timeline) instead of the static system arrow. Position and variant both read off the
+ * shared PointerField (no listener of its own): `cursorTarget` is written by the single
+ * `pointerover` listener in PointerFieldProvider, which every cursor-reactive surface
+ * shares.
  */
 export default function CursorInstrument() {
   const field = useSurfaceField();
   const fallback = useMotionValue(0);
+  const fallbackVariant = useMotionValue<keyof typeof CURSOR_RING_SCALE>("default");
   const ringScale = useMotionValue(1);
   const dotScale = useMotionValue(1);
 
@@ -60,21 +40,15 @@ export default function CursorInstrument() {
     };
   }, [active]);
 
-  useEffect(() => {
-    if (!active) return;
-    const handleOver = (event: PointerEvent) => {
-      const variant = resolveVariant(event.target);
-      ringScale.set(RING_SCALE[variant]);
-      dotScale.set(DOT_SCALE[variant]);
-    };
-    window.addEventListener("pointerover", handleOver, { passive: true });
-    return () => window.removeEventListener("pointerover", handleOver);
-  }, [active, ringScale, dotScale]);
+  useMotionValueEvent(field?.cursorTarget ?? fallbackVariant, "change", (variant) => {
+    ringScale.set(CURSOR_RING_SCALE[variant]);
+    dotScale.set(CURSOR_DOT_SCALE[variant]);
+  });
 
   if (!active) return null;
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100]">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-100">
       <motion.div
         className="absolute left-0 top-0 h-6 w-6 rounded-full border border-white mix-blend-difference"
         style={{

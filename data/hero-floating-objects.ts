@@ -1,5 +1,13 @@
 import type { FloatingObjectConfig } from "@/types/floating-object";
 
+/**
+ * Sambhav OS v2 — cut from five floating cards to three. The dropped two (Harbor & Holt,
+ * LinkedIn content creator) were already told in full inside Journey; keeping them here
+ * too read as repetition, not proof. Three cards — one live build, one identity claim,
+ * one number — is enough to communicate confidence without crowding the headline, and it
+ * leaves the bottom-right quadrant intentionally empty: negative space that draws the eye
+ * toward the CTA instead of another card competing for it.
+ */
 export const heroFloatingObjects: FloatingObjectConfig[] = [
   {
     id: "projects",
@@ -9,12 +17,10 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     hideOnMobile: true,
     // Tablet (md, 768-1023) gets its own larger, deliberately-placed treatment instead
     // of a scaled-down desktop layout; lg: restores the approved desktop numbers — laptop
-    // and true desktop now share the same 5-card layout, differentiated only by motion
+    // and true desktop now share the same 3-card layout, differentiated only by motion
     // amplitude (see FloatingCard's motionScaleForWidth), not by which cards show.
     // top/height kept small even at md so a short landscape-tablet viewport (e.g. 1024x768)
-    // still clears the headline — verified against the required breakpoint matrix. Height
-    // matched to the timeline/writing cards' proportions (~1.6-1.9 aspect), not the taller
-    // near-square shape this card used to have.
+    // still clears the headline — verified against the required breakpoint matrix.
     tabletClassName:
       "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[6.5rem] lg:top-[8%] lg:left-[6%] lg:w-[12.5rem] lg:h-[7.5rem]",
     tier: 1,
@@ -24,7 +30,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
       entranceDelay: 0.1,
       hoverScale: 1.03,
       mass: 1,
-      driftRadius: 8,
+      driftRadius: 4,
       driftSpeed: 34,
     },
   },
@@ -42,7 +48,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
       entranceDelay: 0.2,
       hoverScale: 1.04,
       mass: 0.8,
-      driftRadius: 11,
+      driftRadius: 5,
       driftSpeed: 28,
     },
   },
@@ -61,44 +67,8 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
       entranceDelay: 0.3,
       hoverScale: 1.05,
       mass: 0.65,
-      driftRadius: 14,
+      driftRadius: 6,
       driftSpeed: 24,
-    },
-  },
-  {
-    id: "ai-builds",
-    position: { bottom: "9%", right: "-1.5rem" },
-    width: "14rem",
-    height: "8rem",
-    hideOnMobile: true,
-    visibleFrom: "lg",
-    tier: 4,
-    animation: {
-      depth: 0.85,
-      parallaxStrength: 0.85,
-      entranceDelay: 0.15,
-      hoverScale: 1.03,
-      mass: 0.9,
-      driftRadius: 9,
-      driftSpeed: 30,
-    },
-  },
-  {
-    id: "writing",
-    position: { top: "38%", right: "3%" },
-    width: "8rem",
-    height: "5rem",
-    hideOnMobile: true,
-    visibleFrom: "lg",
-    tier: 5,
-    animation: {
-      depth: 0.4,
-      parallaxStrength: 0.5,
-      entranceDelay: 0.35,
-      hoverScale: 1.06,
-      mass: 0.5,
-      driftRadius: 18,
-      driftSpeed: 20,
     },
   },
 ];

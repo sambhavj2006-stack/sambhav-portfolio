@@ -18,6 +18,7 @@ export default function JourneyMilestone({
 }: JourneyMilestoneType & { index: number }) {
   return (
     <Reveal
+      data-cursor="timeline"
       className="grid grid-cols-1 gap-3 border-t border-zinc-200 py-8 sm:py-10 lg:grid-cols-12 lg:gap-8"
       delay={Math.min(index * STAGGER, MAX_STAGGER_DELAY)}
     >

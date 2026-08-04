@@ -10,20 +10,22 @@ import {
 } from "motion/react";
 import { CursorContext } from "./cursor-context";
 import FloatingCardContent from "./FloatingCardContent";
-import { EASE_SIGNATURE, SPRING_TRANSITION } from "@/lib/motion";
+import { EASE_SIGNATURE, SPRING_HOVER } from "@/lib/motionSystem";
 import { createDriftPhase, organicWave } from "@/lib/noise";
 import { useSurfaceField } from "@/components/system/useSurfaceField";
 import type { FloatingObjectConfig } from "@/types/floating-object";
 
 /** ambient wide-field parallax, from normalized cursor position across the whole Hero */
 const MAX_AMBIENT_TRANSLATE = 8;
-const MAX_AMBIENT_TILT = 0.6; // deg — half of the ±1° micro-rotation budget
+const MAX_AMBIENT_TILT = 0.5; // deg — half of the ±1° micro-rotation budget
 const MAX_DRIFT_TILT = 0.4; // deg — the other half, from procedural drift
 const MAX_MICRO_TILT = 0.6; // deg — rotateX/rotateY budget, scaled by depth
 
-/** local cursor-repulsion — the widget leans away as the pointer approaches, spring back on exit */
-const REPULSION_RADIUS = 220;
-const MAX_REPULSION = 18;
+/** local cursor-repulsion — the widget leans away as the pointer approaches, spring back on
+ *  exit. Kept deliberately restrained: it should register as the card noticing the cursor,
+ *  never as it fleeing from it. */
+const REPULSION_RADIUS = 170;
+const MAX_REPULSION = 12;
 
 /**
  * Responsive motion density: desktop (≥1440, the flagship) gets the full amplitude;
@@ -197,7 +199,7 @@ export default function FloatingCard({
 
   // Ambient parallax + repulsion settle through one mass-tuned spring — heavier widgets
   // (higher `mass`) drift less and take longer to arrive, exactly like real inertia.
-  const settleSpring = { ...SPRING_TRANSITION, mass };
+  const settleSpring = { ...SPRING_HOVER, mass };
   const combinedX = useTransform([ambientX, pushX], ([a, p]) => (a as number) + (p as number));
   const combinedY = useTransform([ambientY, pushY], ([a, p]) => (a as number) + (p as number));
   const springX = useSpring(combinedX, settleSpring);
@@ -317,7 +319,7 @@ export default function FloatingCard({
             y: -4 * depth,
             boxShadow: tierStyle.hoverShadow,
           }}
-          transition={SPRING_TRANSITION}
+          transition={SPRING_HOVER}
         >
           <FloatingCardContent id={id} />
         </motion.div>

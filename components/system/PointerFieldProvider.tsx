@@ -4,12 +4,31 @@ import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useMotionValue, useScroll } from "motion/react";
 import { PointerFieldContext, type PointerFieldValue } from "./PointerFieldContext";
 import { useSettledReducedMotion } from "./useSettledReducedMotion";
+import { CURSOR_RING_SCALE, type CursorVariant } from "@/lib/motionSystem";
 
 const SPEED_DECAY = 0.9;
 const SPEED_SETTLE_THRESHOLD = 0.02;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * What kind of surface the pointer is over, for the cursor instrument and the Hero
+ * coordinate readout. `data-cursor` on an element wins outright; otherwise a handful of
+ * tag-based fallbacks cover links/buttons and readable text (headings, paragraphs, list
+ * items — chips included) without needing to annotate every element by hand.
+ */
+function resolveCursorVariant(target: EventTarget | null): CursorVariant {
+  if (!(target instanceof Element)) return "default";
+  const withData = target.closest("[data-cursor]");
+  if (withData) {
+    const value = withData.getAttribute("data-cursor");
+    if (value && value in CURSOR_RING_SCALE) return value as CursorVariant;
+  }
+  if (target.closest("a, button")) return "click";
+  if (target.closest("h1, h2, h3, p, li")) return "text";
+  return "default";
 }
 
 /**
@@ -32,6 +51,7 @@ export default function PointerFieldProvider({
   const speed = useMotionValue(0);
   const presence = useMotionValue(0);
   const elapsed = useMotionValue(0);
+  const cursorTarget = useMotionValue<CursorVariant>("default");
   const { scrollYProgress: scrollProgress } = useScroll();
   // useSyncExternalStore guarantees the SERVER snapshot (false) is used for the client's
   // first paint too, then resyncs to the real matchMedia value right after hydration —
@@ -104,18 +124,28 @@ export default function PointerFieldProvider({
       speed.set(0);
     };
 
+    // One low-frequency listener for the whole app: pointerover only fires on element-
+    // boundary crossings, not continuously, so this is effectively free while the cursor
+    // sits still or travels within the same element. Both CursorInstrument (ring/dot
+    // shape) and the Hero coordinate readout (visibility) read this single value.
+    const handlePointerOver = (event: PointerEvent) => {
+      cursorTarget.set(resolveCursorVariant(event.target));
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("pointerleave", handlePointerLeave);
     window.addEventListener("blur", handlePointerLeave);
+    window.addEventListener("pointerover", handlePointerOver, { passive: true });
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("blur", handlePointerLeave);
+      window.removeEventListener("pointerover", handlePointerOver);
       if (rafId !== null) cancelAnimationFrame(rafId);
       if (decayId !== null) cancelAnimationFrame(decayId);
     };
-  }, [prefersReducedMotion, isCoarsePointer, x, y, nx, ny, speed, presence]);
+  }, [prefersReducedMotion, isCoarsePointer, x, y, nx, ny, speed, presence, cursorTarget]);
 
   // The engine's shared clock: one rAF loop drives procedural drift for every widget
   // instead of each mounting its own timer. Reduced motion means no drift, so no clock.
@@ -139,10 +169,23 @@ export default function PointerFieldProvider({
       presence,
       elapsed,
       scrollProgress,
+      cursorTarget,
       prefersReducedMotion,
       isCoarsePointer,
     }),
-    [x, y, nx, ny, speed, presence, elapsed, scrollProgress, prefersReducedMotion, isCoarsePointer]
+    [
+      x,
+      y,
+      nx,
+      ny,
+      speed,
+      presence,
+      elapsed,
+      scrollProgress,
+      cursorTarget,
+      prefersReducedMotion,
+      isCoarsePointer,
+    ]
   );
 
   return (

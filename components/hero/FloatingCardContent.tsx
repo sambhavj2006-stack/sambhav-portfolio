@@ -35,24 +35,6 @@ export default function FloatingCardContent({ id }: { id: string }) {
           <span className="text-xs text-zinc-500">LinkedIn Followers</span>
         </div>
       );
-    case "ai-builds":
-      return (
-        <div className="flex h-full w-full flex-col justify-center gap-0.5 p-4">
-          <span className="text-sm font-semibold text-zinc-900">
-            Consulting Director
-          </span>
-          <span className="text-xs text-zinc-500">Harbor & Holt</span>
-        </div>
-      );
-    case "writing":
-      return (
-        <div className="flex h-full w-full flex-col justify-center gap-0.5 p-4">
-          <span className="text-xs text-zinc-500">Content Creator</span>
-          <span className="text-sm font-semibold text-zinc-900">
-            LinkedIn
-          </span>
-        </div>
-      );
     default:
       return null;
   }

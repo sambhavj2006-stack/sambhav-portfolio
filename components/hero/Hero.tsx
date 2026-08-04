@@ -16,7 +16,7 @@ export default function Hero() {
       <BackgroundGrid />
       <CursorField objects={heroFloatingObjects} />
 
-      <div className="relative z-10 flex flex-col items-center gap-5 sm:gap-6 md:gap-4 lg:gap-4 xl:gap-6 min-[1440px]:gap-8">
+      <div className="relative z-10 flex flex-col items-center gap-5 sm:gap-6 md:gap-5 lg:gap-6 xl:gap-6 min-[1440px]:gap-8">
         <HeroPortrait />
         <HeroHeading />
         <IdentityChips />
