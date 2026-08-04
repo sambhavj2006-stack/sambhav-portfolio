@@ -6,12 +6,17 @@ import { contactContent } from "@/data/contact";
 export default function ContactCTA() {
   return (
     <Reveal
-      className="flex flex-col items-center gap-4 sm:flex-row"
+      className="flex flex-wrap items-center justify-center gap-4"
       delay={0.1}
     >
       <Magnetic>
         <Button href={contactContent.primaryCta.href} variant="primary">
           {contactContent.primaryCta.label}
+        </Button>
+      </Magnetic>
+      <Magnetic>
+        <Button href={contactContent.collabCta.href} variant="secondary">
+          {contactContent.collabCta.label}
         </Button>
       </Magnetic>
       <Magnetic>

@@ -1,4 +1,5 @@
 import Divider from "@/components/ui/Divider";
+import AuthorLink from "@/components/ui/AuthorLink";
 import { contactContent } from "@/data/contact";
 
 export default function Footer() {
@@ -9,7 +10,9 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl">
         <Divider />
         <div className="flex flex-col items-center gap-6 py-8 text-sm text-zinc-500 md:flex-row md:justify-between">
-          <span>{footer.copyright}</span>
+          <span>
+            {footer.copyright} <AuthorLink className="text-zinc-500" />
+          </span>
           <span className="text-zinc-400">{footer.tagline}</span>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <span className="text-zinc-400">Built with</span>
@@ -24,7 +27,7 @@ export default function Footer() {
           </div>
         </div>
         <p className="pb-2 text-center text-xs text-zinc-400">
-          {footer.credit}
+          {footer.credit} <AuthorLink className="text-zinc-400" />.
         </p>
       </div>
     </footer>

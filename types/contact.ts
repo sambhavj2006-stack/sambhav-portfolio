@@ -20,6 +20,7 @@ export type ContactContent = {
   headline: string;
   description: string;
   primaryCta: ContactCta;
+  collabCta: ContactCta;
   secondaryCta: ContactCta;
   availability: ContactAvailability;
   footer: ContactFooter;

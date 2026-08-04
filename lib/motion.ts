@@ -29,3 +29,8 @@ export const REVEAL_VIEWPORT = { once: true, margin: "-80px" } as const;
 export function isExternalLink(href: string) {
   return href.startsWith("http");
 }
+
+/** Links that should open in a new tab: external URLs and in-app files viewed inline (e.g. the résumé PDF). */
+export function shouldOpenInNewTab(href: string) {
+  return isExternalLink(href) || href.endsWith(".pdf");
+}

@@ -6,6 +6,7 @@ import Magnetic from "@/components/system/Magnetic";
 import { useAmbientParallax } from "@/components/system/useAmbientParallax";
 import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
 import { EASE_SIGNATURE } from "@/lib/motion";
+import { LINKS } from "@/lib/links";
 
 export default function HeroCTA() {
   const prefersReducedMotion = useSettledReducedMotion();
@@ -22,11 +23,22 @@ export default function HeroCTA() {
           : { duration: 0.6, delay: 0.55, ease: EASE_SIGNATURE }
       }
     >
-      <Magnetic>
-        <Button href="#projects" variant="primary">
-          See the work
-        </Button>
-      </Magnetic>
+      <div className="flex flex-col items-center gap-4 sm:flex-row">
+        <Magnetic>
+          <Button href="#projects" variant="primary">
+            See the work
+          </Button>
+        </Magnetic>
+        <Magnetic>
+          <Button
+            href={LINKS.resume}
+            variant="secondary"
+            ariaLabel="View résumé (opens in new tab)"
+          >
+            Résumé
+          </Button>
+        </Magnetic>
+      </div>
     </motion.div>
   );
 }

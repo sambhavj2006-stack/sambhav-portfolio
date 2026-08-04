@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import type { TargetAndTransition } from "motion/react";
 import type { ReactNode } from "react";
 import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
-import { SPRING_TRANSITION, isExternalLink } from "@/lib/motion";
+import { SPRING_TRANSITION, shouldOpenInNewTab } from "@/lib/motion";
 
 type ButtonVariant = "primary" | "secondary";
 
@@ -13,6 +13,7 @@ type ButtonProps = {
   children: ReactNode;
   variant?: ButtonVariant;
   className?: string;
+  ariaLabel?: string;
 };
 
 const FOCUS_RING =
@@ -33,15 +34,17 @@ export default function Button({
   children,
   variant = "primary",
   className = "",
+  ariaLabel,
 }: ButtonProps) {
   const prefersReducedMotion = useSettledReducedMotion();
-  const external = isExternalLink(href);
+  const newTab = shouldOpenInNewTab(href);
 
   return (
     <motion.a
       href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      aria-label={ariaLabel}
       className={`inline-flex items-center justify-center ${VARIANT_STYLES[variant]} ${className}`}
       whileHover={prefersReducedMotion ? undefined : HOVER_ELEVATION[variant]}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}

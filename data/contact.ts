@@ -1,4 +1,5 @@
 import type { ContactContent } from "@/types/contact";
+import { LINKS } from "@/lib/links";
 
 export const contactContent: ContactContent = {
   headline: "Let's build something memorable.",
@@ -6,11 +7,15 @@ export const contactContent: ContactContent = {
     "Whether it's consulting, strategy, storytelling, or simply exchanging ideas—I always enjoy working with people obsessed with building meaningful things.",
   primaryCta: {
     label: "Email Me",
-    href: "mailto:sambhavj2006@gmail.com",
+    href: LINKS.email,
+  },
+  collabCta: {
+    label: "Let's Collaborate",
+    href: LINKS.collab,
   },
   secondaryCta: {
     label: "Connect on LinkedIn",
-    href: "https://www.linkedin.com/in/sambhavjain157/",
+    href: LINKS.linkedin,
   },
   availability: {
     title: "Currently",
@@ -24,9 +29,9 @@ export const contactContent: ContactContent = {
     statusText: "Available for conversations.",
   },
   footer: {
-    copyright: "© 2026 Sambhav Jain",
+    copyright: "© 2026",
     tagline: "Turning meh into memorable.",
     builtWith: ["Next.js", "TypeScript", "Tailwind", "Motion"],
-    credit: "Designed and engineered by Sambhav Jain.",
+    credit: "Designed and engineered by",
   },
 };
