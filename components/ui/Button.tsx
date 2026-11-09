@@ -1,42 +1,37 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { TargetAndTransition } from "motion/react";
 import type { ReactNode } from "react";
 import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
-import { SPRING_TRANSITION, shouldOpenInNewTab } from "@/lib/motion";
+import { SPRING_HOVER, shouldOpenInNewTab } from "@/lib/motion";
 
-type ButtonVariant = "primary" | "secondary";
+/**
+ * - `solid`: bone pill — primary action on night surfaces
+ * - `ghost`: hairline pill in the current text colour — secondary action anywhere
+ * - `ink`: umber pill — primary action over the bright day sky (hero)
+ */
+type ButtonVariant = "solid" | "ghost" | "ink";
 
-type ButtonProps = {
-  href: string;
-  children: ReactNode;
-  variant?: ButtonVariant;
-  className?: string;
-  ariaLabel?: string;
-};
-
-const FOCUS_RING =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2";
-
-const VARIANT_STYLES: Record<ButtonVariant, string> = {
-  primary: `rounded-full bg-zinc-900 px-8 py-4 text-base font-medium text-white transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-zinc-700 ${FOCUS_RING}`,
-  secondary: `rounded-full border border-zinc-200 px-6 py-3 text-sm font-medium text-zinc-700 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-zinc-300 hover:text-zinc-900 ${FOCUS_RING}`,
-};
-
-const HOVER_ELEVATION: Record<ButtonVariant, TargetAndTransition> = {
-  primary: { y: -2, boxShadow: "0 10px 24px -10px rgba(0,0,0,0.3)" },
-  secondary: { y: -1 },
+const VARIANTS: Record<ButtonVariant, string> = {
+  solid: "bg-bone text-night hover:bg-sand",
+  ghost: "border border-current/25 hover:border-current/60",
+  ink: "bg-ink text-bone hover:bg-rust",
 };
 
 export default function Button({
   href,
   children,
-  variant = "primary",
+  variant = "solid",
   className = "",
   ariaLabel,
-}: ButtonProps) {
-  const prefersReducedMotion = useSettledReducedMotion();
+}: {
+  href: string;
+  children: ReactNode;
+  variant?: ButtonVariant;
+  className?: string;
+  ariaLabel?: string;
+}) {
+  const reduced = useSettledReducedMotion();
   const newTab = shouldOpenInNewTab(href);
 
   return (
@@ -45,10 +40,10 @@ export default function Button({
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noopener noreferrer" : undefined}
       aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center ${VARIANT_STYLES[variant]} ${className}`}
-      whileHover={prefersReducedMotion ? undefined : HOVER_ELEVATION[variant]}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-      transition={SPRING_TRANSITION}
+      className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-mono text-xs font-medium uppercase tracking-[0.18em] transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-eye focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${VARIANTS[variant]} ${className}`}
+      whileHover={reduced ? undefined : { y: -2 }}
+      whileTap={reduced ? undefined : { scale: 0.96 }}
+      transition={SPRING_HOVER}
     >
       {children}
     </motion.a>

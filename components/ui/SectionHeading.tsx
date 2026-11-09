@@ -1,35 +1,38 @@
-type SectionHeadingProps = {
-  eyebrow?: string;
-  heading: string;
-  description?: string;
-  align?: "left" | "center";
-};
+import Reveal from "@/components/system/Reveal";
 
+/**
+ * Every section opens the same way: a mono waypoint index, then a wide display title.
+ * Display type is always uppercase Syncopate; body copy never is.
+ */
 export default function SectionHeading({
-  eyebrow,
-  heading,
+  index,
+  label,
+  title,
   description,
   align = "left",
-}: SectionHeadingProps) {
+}: {
+  /** e.g. "01" */
+  index: string;
+  /** e.g. "The Arsenal" */
+  label: string;
+  title: string;
+  description?: string;
+  align?: "left" | "center";
+}) {
+  const centered = align === "center";
   return (
-    <div
-      className={`flex flex-col gap-4 ${
-        align === "center"
-          ? "items-center text-center"
-          : "items-start text-left"
-      }`}
-    >
-      {eyebrow && (
-        <span className="text-xs font-medium uppercase tracking-[0.3em] text-zinc-500">
-          {eyebrow}
-        </span>
-      )}
-      <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl md:text-5xl">
-        {heading}
+    <Reveal blur className={`flex flex-col gap-5 ${centered ? "items-center text-center" : ""}`}>
+      <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-ochre">
+        {index} <span className="text-bone/30">/</span> {label}
+      </span>
+      <h2 className="max-w-4xl text-balance font-display text-[clamp(1.75rem,4.2vw,3.5rem)] font-bold uppercase leading-[1.02] tracking-tight text-bone">
+        {title}
       </h2>
       {description && (
-        <p className="max-w-xl text-base text-zinc-500">{description}</p>
+        <p className={`max-w-xl text-base leading-relaxed text-bone/60 ${centered ? "mx-auto" : ""}`}>
+          {description}
+        </p>
       )}
-    </div>
+    </Reveal>
   );
 }

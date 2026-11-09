@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import SiteShell from "@/components/shell/SiteShell";
-import "./globals.css";
+import { Geist, Geist_Mono, Syncopate } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
 import { SITE_URL } from "@/lib/links";
+import WorldBackdrop from "@/components/world/WorldBackdrop";
+import SmoothScroll from "@/components/system/SmoothScroll";
+import Nav from "@/components/nav/Nav";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const syncopate = Syncopate({
+  variable: "--font-syncopate",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const DESCRIPTION =
-  "Sambhav Jain — Builder, Consultant, President, Creator. Turning meh into memorable through storytelling.";
+  "Sambhav Jain — Builder, Consultant, President, Creator. Tools, work and the trek so far.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -36,18 +36,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${syncopate.variable} antialiased`}
     >
-      <body id="top" className="min-h-full flex flex-col">
-        <SiteShell>{children}</SiteShell>
+      <body>
+        <WorldBackdrop />
+        <SmoothScroll />
+        <Nav />
+        <main>{children}</main>
         <Analytics />
       </body>
     </html>

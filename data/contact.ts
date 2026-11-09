@@ -31,7 +31,7 @@ export const contactContent: ContactContent = {
   footer: {
     copyright: "© 2026",
     tagline: "Turning meh into memorable.",
-    builtWith: ["Next.js", "TypeScript", "Tailwind", "Motion"],
+    builtWith: ["Next.js", "Three.js", "GLSL", "Motion"],
     credit: "Designed and engineered by",
   },
 };

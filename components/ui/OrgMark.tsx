@@ -32,7 +32,11 @@ export default function OrgMark({ name, size = "md", className = "" }: OrgMarkPr
   return (
     <span
       aria-hidden="true"
-      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-zinc-200 bg-white font-semibold tracking-wide text-zinc-500 ${SIZE_STYLES[size]} ${className}`}
+      // Real logos sit on a bone chip (most are drawn for light backgrounds); generated
+      // monograms sit on the night surface they're placed on.
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg border font-mono font-medium tracking-wide ${
+        logo ? "border-bone/20 bg-bone" : "border-bone/15 bg-bone/[0.04] text-bone/60"
+      } ${SIZE_STYLES[size]} ${className}`}
     >
       {logo ? (
         <Image

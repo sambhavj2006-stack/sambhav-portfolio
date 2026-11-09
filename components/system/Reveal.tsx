@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { EASE_SIGNATURE, REVEAL_VIEWPORT } from "@/lib/motion";
 import { useSettledReducedMotion } from "./useSettledReducedMotion";
 
-type RevealTag = "div" | "ul" | "section";
+type RevealTag = "div" | "ul" | "ol" | "li" | "section";
 
 type RevealProps = {
   children: ReactNode;
