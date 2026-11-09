@@ -83,5 +83,6 @@ export function computeWorldMood(out: WorldMood) {
  *  anything that should follow the world without its own scroll math (e.g. the sound). */
 export const liveMood: WorldMood = { ...ARRIVAL_MOOD };
 
-/** Shared pointer position, normalized -1..1 — written by the scene's single listener. */
-export const worldPointer = { x: 0, y: 0 };
+/** Shared pointer, written by the scene's single listener: x/y normalized -1..1,
+ *  px/py in CSS pixels, `active` false until the pointer first moves. */
+export const worldPointer = { x: 0, y: 0, px: -9999, py: -9999, active: false };

@@ -3,14 +3,7 @@ export type ContactCta = {
   href: string;
 };
 
-export type CurrentFocusItem = {
-  role: string;
-  organization: string;
-};
-
 export type ContactAvailability = {
-  title: string;
-  items: CurrentFocusItem[];
   openFor: string[];
   statusText: string;
 };

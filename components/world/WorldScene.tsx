@@ -12,6 +12,7 @@ import {
   type WorldMood,
 } from "@/lib/world";
 import { desertFragmentShader, desertVertexShader } from "./desertShader";
+import SandName from "./SandName";
 
 /** How quickly the world eases toward the mood scroll asks for (per second). */
 const MOOD_EASE = 3.2;
@@ -100,6 +101,9 @@ export default function WorldScene({
     const onMove = (event: PointerEvent) => {
       worldPointer.x = (event.clientX / window.innerWidth) * 2 - 1;
       worldPointer.y = (event.clientY / window.innerHeight) * 2 - 1;
+      worldPointer.px = event.clientX;
+      worldPointer.py = event.clientY;
+      worldPointer.active = true;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
@@ -115,6 +119,7 @@ export default function WorldScene({
       style={{ position: "absolute", inset: 0 }}
     >
       <DesertPlane frozen={frozen} />
+      {!frozen && <SandName lowPower={lowPower} />}
       {!lowPower && (
         <EffectComposer multisampling={0}>
           <Bloom mipmapBlur intensity={0.55} luminanceThreshold={0.72} luminanceSmoothing={0.25} />

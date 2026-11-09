@@ -1,21 +1,19 @@
 import Hero from "@/sections/hero/Hero";
 import Descent from "@/sections/descent/Descent";
-import Tools from "@/sections/tools/Tools";
-import Journey from "@/sections/journey/Journey";
-import Awards from "@/sections/awards/Awards";
-import Writing from "@/sections/writing/Writing";
+import Archive from "@/sections/archive/Archive";
+import Craft from "@/sections/craft/Craft";
+import Signal from "@/sections/signal/Signal";
 import Contact from "@/sections/contact/Contact";
 
-/** One journey, top to bottom: arrival at noon -> the descent -> the night inside -> dusk trek -> nightfall. */
+/** Arrival at noon -> the descent -> the Archive inside the maw -> dusk (what I do) -> signal -> nightfall. */
 export default function Home() {
   return (
     <>
       <Hero />
       <Descent />
-      <Tools />
-      <Journey />
-      <Awards />
-      <Writing />
+      <Archive />
+      <Craft />
+      <Signal />
       <Contact />
     </>
   );

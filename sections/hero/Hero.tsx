@@ -10,19 +10,19 @@ const ROLES = ["Builder", "Consultant", "President", "Creator"];
 const NAME = ["SAMBHAV", "JAIN"];
 
 /**
- * Arrival. The name rises letter by letter out of the sand, sitting in the open day sky
- * of the painted world behind it (the world itself is the fixed backdrop). Type is ink
- * over the bright sky; the scroll cue sits lower, over the dunes, in bone.
+ * Arrival. The name is drawn twice: as this real <h1> (layout, accessibility, the
+ * no-WebGL / reduced-motion fallback) and as sand in the world canvas, which samples
+ * this h1's letters and then hides its glyphs (see SandName). Letters are static spans —
+ * no transforms — so the sand always matches their laid-out positions.
  */
 export default function Hero() {
   const reduced = useSettledReducedMotion();
-  let letterIndex = 0;
 
   const rise = (delay: number) =>
     reduced
       ? {}
       : {
-          initial: { opacity: 0, y: 18, filter: "blur(8px)" },
+          initial: { opacity: 0, y: 14, filter: "blur(8px)" },
           animate: { opacity: 1, y: 0, filter: "blur(0px)" },
           transition: { duration: 1.1, delay, ease: EASE_SIGNATURE },
         };
@@ -33,7 +33,7 @@ export default function Hero() {
       className="relative flex h-svh min-h-[640px] flex-col items-center px-5 pt-[15vh] text-center text-ink sm:pt-[14vh]"
     >
       <motion.p
-        {...rise(0.2)}
+        {...rise(1.4)}
         className="flex flex-wrap justify-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.32em] sm:text-[11px]"
       >
         {ROLES.map((role, i) => (
@@ -44,39 +44,34 @@ export default function Hero() {
         ))}
       </motion.p>
 
-      <h1
+      <motion.h1
+        id="hero-name"
         aria-label="Sambhav Jain"
-        className="mt-6 font-display text-[clamp(2.6rem,10.5vw,10rem)] font-bold leading-[0.92] tracking-[-0.02em]"
+        initial={reduced ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, delay: 0.2, ease: EASE_SIGNATURE }}
+        className="mt-6 select-none font-display text-[clamp(2.6rem,10.5vw,10rem)] font-bold leading-[0.92] tracking-[-0.02em]"
       >
         {NAME.map((word) => (
-          <span key={word} aria-hidden="true" className="block overflow-hidden pb-[0.06em]">
-            {word.split("").map((letter) => {
-              const i = letterIndex++;
-              return (
-                <motion.span
-                  key={`${word}-${i}`}
-                  className="inline-block"
-                  initial={reduced ? false : { y: "105%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 1.2, delay: 0.35 + i * 0.05, ease: EASE_SIGNATURE }}
-                >
-                  {letter}
-                </motion.span>
-              );
-            })}
+          <span key={word} aria-hidden="true" className="block">
+            {word.split("").map((letter, i) => (
+              <span key={i} data-letter className="inline-block">
+                {letter}
+              </span>
+            ))}
           </span>
         ))}
-      </h1>
+      </motion.h1>
 
       <motion.p
-        {...rise(1.1)}
+        {...rise(1.9)}
         className="mt-6 max-w-md text-balance text-base leading-relaxed text-ink/75 sm:text-lg"
       >
-        Turning meh into memorable through storytelling. Tools I&apos;ve built, work I&apos;ve
-        done, and the trek so far.
+        Turning meh into memorable through storytelling. Everything I&apos;ve built lives
+        below the sand.
       </motion.p>
 
-      <motion.div {...rise(1.3)} className="mt-8 flex flex-wrap justify-center gap-3">
+      <motion.div {...rise(2.1)} className="mt-8 flex flex-wrap justify-center gap-3">
         <Button href="#descent" variant="ink">
           Descend
         </Button>
@@ -87,7 +82,7 @@ export default function Hero() {
 
       <motion.a
         href="#descent"
-        {...rise(1.8)}
+        {...rise(2.6)}
         className="absolute bottom-7 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-bone/80"
       >
         Scroll to descend

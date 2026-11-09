@@ -51,6 +51,12 @@ body {
     );
 }
 
+/* Once the sand name is laid out in the world canvas, the DOM glyphs step aside — the
+   h1 keeps its layout (the sand reads it) and stays readable to assistive tech. */
+html[data-sand="on"] #hero-name {
+  color: transparent;
+}
+
 /* Without WebGL the backdrop can't darken into night, so reading sections bring their
    own night surface instead. */
 .no-webgl .world-surface {

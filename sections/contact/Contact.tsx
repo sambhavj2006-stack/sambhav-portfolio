@@ -23,7 +23,7 @@ export default function Contact() {
       <div className="mx-auto flex max-w-6xl flex-col gap-16">
         <Reveal blur className="flex flex-col gap-8">
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-ochre">
-            05 <span className="text-bone/30">/</span> Nightfall
+            04 <span className="text-bone/30">/</span> Nightfall
           </span>
           <h2 className="max-w-5xl font-display text-[clamp(2.2rem,7vw,6.5rem)] font-bold uppercase leading-[0.95] tracking-tight text-bone">
             {contactContent.headline}
@@ -43,7 +43,7 @@ export default function Contact() {
           </Button>
         </Reveal>
 
-        <Reveal delay={0.15} className="grid gap-10 border-t border-bone/10 pt-12 md:grid-cols-[auto_1fr_1fr]">
+        <Reveal delay={0.15} className="grid gap-8 border-t border-bone/10 pt-12 grid-cols-[auto_1fr] items-center">
           <div className="relative h-28 w-24 overflow-hidden rounded-xl border border-bone/15">
             <Image
               src="/photos/gallery/front-shot.jpeg"
@@ -53,20 +53,7 @@ export default function Contact() {
               className="object-cover object-top sepia-[0.25]"
             />
           </div>
-          <div className="flex flex-col gap-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-ochre">
-              {availability.title}
-            </span>
-            <ul className="flex flex-col gap-2">
-              {availability.items.map((item) => (
-                <li key={item.role} className="flex flex-wrap gap-x-3 text-bone">
-                  <span className="font-medium">{item.role}</span>
-                  <span className="text-bone/50">{item.organization}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col justify-center gap-4">
             <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-ochre">
               <span className="h-1.5 w-1.5 rounded-full bg-eye shadow-[0_0_10px_2px_rgba(95,180,232,0.6)]" />
               {availability.statusText}

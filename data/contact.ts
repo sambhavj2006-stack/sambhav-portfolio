@@ -18,13 +18,6 @@ export const contactContent: ContactContent = {
     href: LINKS.linkedin,
   },
   availability: {
-    title: "Now",
-    items: [
-      { role: "President", organization: "Grandeur" },
-      { role: "Consulting Director", organization: "Harbor & Holt" },
-      { role: "Project Lead", organization: "KRAFTON India & Honasa" },
-      { role: "Founder", organization: "Clarifyd" },
-    ],
     openFor: ["Consulting", "Strategy", "Collaborations"],
     statusText: "Open for conversations",
   },
