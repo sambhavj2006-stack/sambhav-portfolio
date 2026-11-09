@@ -18,7 +18,9 @@ export default function NavLogo({ scrolled }: { scrolled: boolean }) {
   const prefersReducedMotion = useSettledReducedMotion();
 
   return (
-    <Magnetic radius={70} strength={0.3}>
+    // `flex`, not Magnetic's default inline-block: an inline-block wrapper reserves
+    // text-descender space under the link, which nudged the logo ~3px above the nav links.
+    <Magnetic radius={70} strength={0.3} className="flex">
       <a
         href="#hero"
         aria-label="Sambhav Jain — back to top"

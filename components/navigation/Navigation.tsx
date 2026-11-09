@@ -42,7 +42,7 @@ export default function Navigation() {
         <DesktopNav scrolled={scrolled} />
         <MobileNav scrolled={scrolled} />
       </div>
-      <NavProgress />
+      <NavProgress visible={scrolled} />
     </header>
   );
 }

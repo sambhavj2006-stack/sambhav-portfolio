@@ -11,7 +11,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-white px-6 py-28 md:py-0"
+      className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-white px-6 py-28 md:pb-16 md:pt-28"
     >
       <BackgroundGrid />
       <CursorField objects={heroFloatingObjects} />

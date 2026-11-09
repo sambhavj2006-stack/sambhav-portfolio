@@ -11,7 +11,8 @@ import type { FloatingObjectConfig } from "@/types/floating-object";
 export const heroFloatingObjects: FloatingObjectConfig[] = [
   {
     id: "projects",
-    position: { top: "8%", left: "6%" },
+    // max(): on short viewports a pure % puts the card up under the fixed nav bar.
+    position: { top: "max(8%, 6rem)", left: "6%" },
     width: "12.5rem",
     height: "7.5rem",
     hideOnMobile: true,
@@ -22,7 +23,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
     // top/height kept small even at md so a short landscape-tablet viewport (e.g. 1024x768)
     // still clears the headline — verified against the required breakpoint matrix.
     tabletClassName:
-      "md:block md:top-[6%] md:left-[5%] md:w-[13.5rem] md:h-[6.5rem] lg:top-[8%] lg:left-[6%] lg:w-[12.5rem] lg:h-[7.5rem]",
+      "md:block md:top-[max(6%,6rem)] md:left-[5%] md:w-[13.5rem] md:h-[6.5rem] lg:top-[max(8%,6rem)] lg:left-[6%] lg:w-[12.5rem] lg:h-[7.5rem]",
     tier: 1,
     animation: {
       depth: 1,
@@ -36,7 +37,7 @@ export const heroFloatingObjects: FloatingObjectConfig[] = [
   },
   {
     id: "timeline",
-    position: { top: "10%", right: "9%" },
+    position: { top: "max(10%, 6rem)", right: "9%" },
     width: "10rem",
     height: "6rem",
     hideOnMobile: true,

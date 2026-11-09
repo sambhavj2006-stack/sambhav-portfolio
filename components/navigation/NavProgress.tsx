@@ -9,7 +9,9 @@ import { useSettledReducedMotion } from "@/components/system/useSettledReducedMo
  * wire — a damped, overdamped spring so it never overshoots, with a bright leading tip
  * that carries the charge.
  */
-export default function NavProgress() {
+/** `visible` is false while the header is still transparent over the Hero, so the
+ *  track never draws a hairline straight across the portrait. */
+export default function NavProgress({ visible }: { visible: boolean }) {
   const prefersReducedMotion = useSettledReducedMotion();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, INERTIA_SPRING);
@@ -20,7 +22,9 @@ export default function NavProgress() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 h-px bg-zinc-200/70"
+      className={`absolute inset-x-0 bottom-0 h-px bg-zinc-200/70 transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
     >
       <motion.div
         className="absolute inset-y-0 left-0 origin-left bg-zinc-900"
