@@ -6,6 +6,7 @@ import { navLinks } from "@/data/nav-links";
 import { LINKS } from "@/lib/links";
 import { EASE_SIGNATURE } from "@/lib/motion";
 import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
+import SoundToggle from "./SoundToggle";
 
 const LINK =
   "font-mono text-[11px] uppercase tracking-[0.22em] transition-opacity duration-300 hover:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-eye rounded-sm";
@@ -72,6 +73,7 @@ export default function Nav() {
                 {link.label}
               </a>
             ))}
+            <SoundToggle />
             <a
               href={LINKS.resume}
               target="_blank"
@@ -81,16 +83,19 @@ export default function Nav() {
               Résumé
             </a>
           </nav>
-          <button
-            ref={triggerRef}
-            type="button"
-            aria-label="Open menu"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-            className={`${LINK} -mr-2 p-2 md:hidden`}
-          >
-            Menu
-          </button>
+          <div className="flex items-center gap-5 md:hidden">
+            <SoundToggle />
+            <button
+              ref={triggerRef}
+              type="button"
+              aria-label="Open menu"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+              className={`${LINK} -mr-2 p-2`}
+            >
+              Menu
+            </button>
+          </div>
         </div>
       </header>
 

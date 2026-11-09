@@ -79,5 +79,9 @@ export function computeWorldMood(out: WorldMood) {
   }
 }
 
+/** The mood as currently rendered (eased), written by the scene every frame — read by
+ *  anything that should follow the world without its own scroll math (e.g. the sound). */
+export const liveMood: WorldMood = { ...ARRIVAL_MOOD };
+
 /** Shared pointer position, normalized -1..1 — written by the scene's single listener. */
 export const worldPointer = { x: 0, y: 0 };

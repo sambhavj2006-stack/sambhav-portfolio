@@ -4,7 +4,13 @@ import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { ARRIVAL_MOOD, computeWorldMood, worldPointer, type WorldMood } from "@/lib/world";
+import {
+  ARRIVAL_MOOD,
+  computeWorldMood,
+  liveMood,
+  worldPointer,
+  type WorldMood,
+} from "@/lib/world";
 import { desertFragmentShader, desertVertexShader } from "./desertShader";
 
 /** How quickly the world eases toward the mood scroll asks for (per second). */
@@ -41,6 +47,7 @@ function DesertPlane({ frozen }: { frozen: boolean }) {
     for (const key of Object.keys(cur) as (keyof WorldMood)[]) {
       cur[key] += (target.current[key] - cur[key]) * k;
     }
+    Object.assign(liveMood, cur);
 
     if (!material.current) return;
     const u = material.current.uniforms as typeof uniforms;
