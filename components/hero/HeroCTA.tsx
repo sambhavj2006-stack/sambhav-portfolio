@@ -25,7 +25,7 @@ export default function HeroCTA() {
     >
       <div className="flex flex-col items-center gap-4 sm:flex-row">
         <Magnetic>
-          <Button href="#projects" variant="primary">
+          <Button href="#builds" variant="primary">
             See the work
           </Button>
         </Magnetic>

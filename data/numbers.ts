@@ -11,3 +11,12 @@ export const numbers: Stat[] = [
   { id: "students-mentored", value: "1,000+", label: "Students mentored" },
   { id: "learning-hours", value: "300+", label: "Learning hours" },
 ];
+
+const stat = (id: string) => numbers.find((n) => n.id === id)!;
+
+/** The Writing section's stats row — reuses the entries above so values never drift apart. */
+export const writingStats: Stat[] = [
+  stat("followers"),
+  stat("impressions"),
+  { id: "connections", value: "500+", label: "Connections" },
+];

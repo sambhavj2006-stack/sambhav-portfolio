@@ -10,7 +10,7 @@ import {
 } from "motion/react";
 import { CursorContext } from "./cursor-context";
 import FloatingCardContent from "./FloatingCardContent";
-import { EASE_SIGNATURE, SPRING_HOVER } from "@/lib/motionSystem";
+import { EASE_SIGNATURE, SPRING_HOVER } from "@/lib/motion";
 import { createDriftPhase, organicWave } from "@/lib/noise";
 import { useSurfaceField } from "@/components/system/useSurfaceField";
 import type { FloatingObjectConfig } from "@/types/floating-object";

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import Magnetic from "@/components/system/Magnetic";
 import { useSettledReducedMotion } from "@/components/system/useSettledReducedMotion";
-import { SPRING_TACTILE } from "@/lib/motionSystem";
+import { SPRING_TACTILE } from "@/lib/motion";
 import headshot from "@/public/photos/hero/hero-headshot.jpeg";
 
 /**

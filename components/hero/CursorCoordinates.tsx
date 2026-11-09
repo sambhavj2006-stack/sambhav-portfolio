@@ -3,7 +3,7 @@
 import { useContext, useRef } from "react";
 import { useMotionValue, useMotionValueEvent } from "motion/react";
 import { useSurfaceField } from "@/components/system/useSurfaceField";
-import { CROSSHAIR_OPACITY, type CursorVariant } from "@/lib/motionSystem";
+import { CROSSHAIR_OPACITY, type CursorVariant } from "@/lib/motion";
 import { CursorContext } from "./cursor-context";
 
 /**

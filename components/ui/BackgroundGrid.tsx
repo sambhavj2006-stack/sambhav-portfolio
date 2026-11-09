@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useSurfaceField } from "@/components/system/useSurfaceField";
 import { organicWave } from "@/lib/noise";
-import { SPRING_GLOW } from "@/lib/motionSystem";
+import { SPRING_GLOW } from "@/lib/motion";
 
 type BackgroundGridProps = {
   /** px between grid lines/intersections */

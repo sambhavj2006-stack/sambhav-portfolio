@@ -30,16 +30,17 @@ export default function SectionCoordinateReadout() {
     );
     if (elements.length === 0) return;
 
+    // The active section is whichever one crosses the viewport's horizontal midline.
+    // (A visibility-ratio threshold never fires for sections taller than ~3 viewports,
+    // like Journey on a laptop screen.)
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const visible = entries.find((entry) => entry.isIntersecting);
         if (!visible) return;
         const index = SECTIONS.findIndex(({ id }) => id === visible.target.id);
         if (index !== -1) setActiveIndex(index);
       },
-      { threshold: [0.35, 0.5, 0.65] }
+      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
     );
 
     elements.forEach((el) => observer.observe(el));

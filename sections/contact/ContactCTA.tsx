@@ -14,11 +14,13 @@ export default function ContactCTA() {
           {contactContent.primaryCta.label}
         </Button>
       </Magnetic>
-      <Magnetic>
-        <Button href={contactContent.collabCta.href} variant="secondary">
-          {contactContent.collabCta.label}
-        </Button>
-      </Magnetic>
+      {contactContent.collabCta.href && (
+        <Magnetic>
+          <Button href={contactContent.collabCta.href} variant="secondary">
+            {contactContent.collabCta.label}
+          </Button>
+        </Magnetic>
+      )}
       <Magnetic>
         <Button href={contactContent.secondaryCta.href} variant="secondary">
           {contactContent.secondaryCta.label}

@@ -61,7 +61,7 @@ export default function AvailabilityCard() {
 
       <div className="mt-6 flex items-center justify-center gap-2 border-t border-zinc-200 pt-6">
         <motion.span
-          className="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20"
+          className="h-2 w-2 rounded-full bg-zinc-900 ring-4 ring-zinc-900/10"
           animate={
             prefersReducedMotion
               ? undefined

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useMotionValue, useScroll } from "motion/react";
 import { PointerFieldContext, type PointerFieldValue } from "./PointerFieldContext";
 import { useSettledReducedMotion } from "./useSettledReducedMotion";
-import { CURSOR_RING_SCALE, type CursorVariant } from "@/lib/motionSystem";
+import { CURSOR_RING_SCALE, type CursorVariant } from "@/lib/motion";
 
 const SPEED_DECAY = 0.9;
 const SPEED_SETTLE_THRESHOLD = 0.02;

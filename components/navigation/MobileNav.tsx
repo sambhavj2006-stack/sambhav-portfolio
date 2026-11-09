@@ -15,6 +15,7 @@ export default function MobileNav({ scrolled }: { scrolled: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useSettledReducedMotion();
 
   const close = () => {
@@ -30,7 +31,23 @@ export default function MobileNav({ scrolled }: { scrolled: boolean }) {
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") {
+        close();
+        return;
+      }
+      // Keep Tab focus inside the open menu instead of letting it escape to the page behind.
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>("a[href], button");
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
 
@@ -60,6 +77,7 @@ export default function MobileNav({ scrolled }: { scrolled: boolean }) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"

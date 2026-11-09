@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import SiteShell from "@/components/shell/SiteShell";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SITE_URL } from "@/lib/links";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,10 +15,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const DESCRIPTION =
+  "Sambhav Jain — Builder, Consultant, President, Creator. Turning meh into memorable through storytelling.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Sambhav Jain",
-  description:
-    "Sambhav Jain — turning meh into memorable through storytelling.",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Sambhav Jain",
+    title: "Sambhav Jain",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sambhav Jain",
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

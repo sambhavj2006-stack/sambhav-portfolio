@@ -44,9 +44,13 @@ export default function Magnetic({
     const resizeObserver = new ResizeObserver(measure);
     resizeObserver.observe(el);
     window.addEventListener("scroll", measure, { passive: true });
+    // A window resize can move the element without changing its size, which the
+    // ResizeObserver alone wouldn't catch.
+    window.addEventListener("resize", measure, { passive: true });
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
     };
   }, []);
 

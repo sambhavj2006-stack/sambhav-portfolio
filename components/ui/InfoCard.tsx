@@ -39,7 +39,6 @@ export default function InfoCard({
 
   return (
     <motion.div
-      data-cursor="view"
       className={`group relative flex h-full flex-col gap-3 rounded-2xl border border-zinc-200 bg-neutral-50 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_24px_-8px_rgba(0,0,0,0.09)] ${className}`}
       whileHover={
         prefersReducedMotion ? undefined : { y: -4, boxShadow: HOVER_SHADOW }

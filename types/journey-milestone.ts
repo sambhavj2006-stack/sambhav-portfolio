@@ -7,11 +7,6 @@ export type CareerProgressionStep = {
   description?: string;
 };
 
-export type JourneyPhoto = {
-  src: string;
-  alt: string;
-};
-
 export type JourneyMilestone = {
   id: string;
   range: string;
@@ -22,7 +17,4 @@ export type JourneyMilestone = {
    *  renders as one Career Progression rail (current title + expandable steps) instead
    *  of a flat role. */
   progression?: CareerProgressionStep[];
-  /** Optional contextual photo — used sparingly, only where a real photo strengthens the
-   *  story (e.g. the Grandeur team, a consulting engagement in progress). */
-  photo?: JourneyPhoto;
 };

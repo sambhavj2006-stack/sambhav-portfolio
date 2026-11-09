@@ -14,6 +14,8 @@ export default function NavProgress() {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, INERTIA_SPRING);
   const tipLeft = useTransform(progress, (v) => `${v * 100}%`);
+  // Hidden at the very top so the tip doesn't sit as a stray dot on the left edge.
+  const tipOpacity = useTransform(progress, [0, 0.01], [0, 1]);
 
   return (
     <div
@@ -27,7 +29,7 @@ export default function NavProgress() {
       {!prefersReducedMotion && (
         <motion.div
           className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-zinc-900 shadow-[0_0_6px_2px_rgba(0,0,0,0.35)]"
-          style={{ left: tipLeft, x: "-50%" }}
+          style={{ left: tipLeft, x: "-50%", opacity: tipOpacity }}
         />
       )}
     </div>

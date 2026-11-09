@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import type { MotionValue } from "motion/react";
-import type { CursorVariant } from "@/lib/motionSystem";
+import type { CursorVariant } from "@/lib/motion";
 
 /**
  * Sambhav OS — the single source of truth for "where is the input force right now."

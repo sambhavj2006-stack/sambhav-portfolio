@@ -44,7 +44,13 @@ export default function CareerProgression({ steps, className = "" }: CareerProgr
             />
             <button
               type="button"
-              onClick={() => setOpenId(isOpen ? null : step.id)}
+              // Hover already opens a step on desktop, so a click there must not toggle it
+              // straight back shut — it only opens. Taps on touch still toggle freely.
+              onClick={(event) => {
+                const isMouse =
+                  (event.nativeEvent as PointerEvent).pointerType === "mouse";
+                setOpenId(isOpen && !isMouse ? null : step.id);
+              }}
               onMouseEnter={() => hasDetail && setOpenId(step.id)}
               className="-mx-2 flex w-full items-baseline justify-between gap-4 rounded-md px-2 py-2 text-left transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
             >

@@ -5,18 +5,8 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import StatTile from "@/components/ui/StatTile";
 import Button from "@/components/ui/Button";
 import Magnetic from "@/components/system/Magnetic";
-import { socialLinks } from "@/data/social-links";
-
-const WRITING_STATS = [
-  { id: "followers", value: "9,056+", label: "LinkedIn followers" },
-  { id: "impressions", value: "2M+", label: "LinkedIn impressions" },
-  { id: "connections", value: "500+", label: "Connections" },
-];
-
-const linkedinHref =
-  socialLinks.find((link) => link.label === "LinkedIn")?.href ?? "#";
-const topmateHref =
-  socialLinks.find((link) => link.label === "Topmate")?.href ?? "#";
+import { writingStats } from "@/data/numbers";
+import { LINKS } from "@/lib/links";
 
 export default function Writing() {
   return (
@@ -35,8 +25,8 @@ export default function Writing() {
           />
         </Reveal>
 
-        <Reveal delay={0.1} className="grid grid-cols-3 gap-8">
-          {WRITING_STATS.map((stat) => (
+        <Reveal delay={0.1} className="grid grid-cols-3 gap-4 sm:gap-8">
+          {writingStats.map((stat) => (
             <StatTile
               key={stat.id}
               value={stat.value}
@@ -48,12 +38,12 @@ export default function Writing() {
 
         <Reveal delay={0.2} className="flex flex-col items-center gap-4 sm:flex-row">
           <Magnetic>
-            <Button href={linkedinHref} variant="primary">
+            <Button href={LINKS.linkedin} variant="primary">
               Read on LinkedIn
             </Button>
           </Magnetic>
           <Magnetic>
-            <Button href={topmateHref} variant="secondary">
+            <Button href={LINKS.topmate} variant="secondary">
               Book a session on Topmate
             </Button>
           </Magnetic>

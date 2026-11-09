@@ -9,5 +9,10 @@ export const LINKS = {
 
   resume: "/Resume/Resume.pdf",
 
-  collab: "https://forms.gle/YOUR_GOOGLE_FORM_LINK",
+  /** Google Form for collaboration requests. Leave empty and the
+   *  "Let's Collaborate" button simply doesn't render. */
+  collab: "",
 };
+
+/** Production URL — used for absolute links in metadata and social previews. */
+export const SITE_URL = "https://sambhav-portfolio-two.vercel.app";

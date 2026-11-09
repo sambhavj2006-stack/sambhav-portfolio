@@ -7,7 +7,7 @@ import {
   CURSOR_DOT_SPRING,
   CURSOR_RING_SCALE,
   CURSOR_RING_SPRING,
-} from "@/lib/motionSystem";
+} from "@/lib/motion";
 import { useSurfaceField } from "./useSurfaceField";
 
 /**
@@ -31,6 +31,9 @@ export default function CursorInstrument() {
   const springY = useSpring(field?.y ?? fallback, CURSOR_RING_SPRING);
   const springRingScale = useSpring(ringScale, CURSOR_RING_SPRING);
   const springDotScale = useSpring(dotScale, CURSOR_DOT_SPRING);
+  // Hidden until the pointer first moves, and again whenever it leaves the window —
+  // otherwise the instrument sits parked at (0,0) or at its last position.
+  const presence = useSpring(field?.presence ?? fallback, CURSOR_RING_SPRING);
 
   useEffect(() => {
     if (!active) return;
@@ -48,7 +51,11 @@ export default function CursorInstrument() {
   if (!active) return null;
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-100">
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-100"
+      style={{ opacity: presence }}
+    >
       <motion.div
         className="absolute left-0 top-0 h-6 w-6 rounded-full border border-white mix-blend-difference"
         style={{
@@ -69,6 +76,6 @@ export default function CursorInstrument() {
           scale: springDotScale,
         }}
       />
-    </div>
+    </motion.div>
   );
 }

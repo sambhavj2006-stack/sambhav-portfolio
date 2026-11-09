@@ -4,8 +4,4 @@ export type EducationEntry = {
   program: string;
   range: string;
   detail?: string;
-  photo?: {
-    src: string;
-    alt: string;
-  };
 };
